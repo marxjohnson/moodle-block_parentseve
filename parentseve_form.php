@@ -6,10 +6,10 @@ class parentseve_form extends moodleform {
         $mform->addElement('hidden','id');
         $mform->addElement('hidden','cmid');
         $mform->addElement('hidden','reviewid');
-        $mform->addElement('date_time_selector', 'timestart', get_string('timestart', 'termreview'));
-        $mform->addElement('date_time_selector', 'timeend', get_string('timeend', 'termreview'));
-        $mform->addElement('text','appointmentlength',get_string('appointmentlength', 'termreview')); // will have to take this in minutes until figure out duration element type (moodle 2.0)
-        $mform->addElement('htmleditor', 'info', get_string('parentseveinfo', 'termreview'),'rows="10" cols="25"');
+        $mform->addElement('date_time_selector', 'timestart', get_string('timestart', 'block_parentseve'));
+        $mform->addElement('date_time_selector', 'timeend', get_string('timeend', 'block_parentseve'));
+        $mform->addElement('text','appointmentlength',get_string('appointmentlength', 'block_parentseve')); // will have to take this in minutes until figure out duration element type (moodle 2.0)
+        $mform->addElement('htmleditor', 'info', get_string('parentseveinfo', 'block_parentseve'),'rows="10" cols="25"');
 
         $mform->addElement('hidden', 'teachers', null, array('id' => 'id_teachers'));
 
@@ -23,7 +23,7 @@ function parentseve_teacher_form($selectedusers, $unselectedusers) {
     echo '<table summary="" style="margin-left:auto;margin-right:auto" border="0" cellpadding="5" cellspacing="0">
             <tr>
                 <td valign="top">
-                <label for="removeselect">'.get_string('parentseveteachers', 'termreview').'</label>
+                <label for="removeselect">'.get_string('parentseveteachers', 'block_parentseve').'</label>
           <br />
           <select name="removeselect[]" size="20" id="removeselect" multiple="multiple" >';
 

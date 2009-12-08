@@ -1,9 +1,26 @@
 <?php
+$string['appbooked'] = 'Appointment with: $a[teacher] At: $a[apptime] booked';
+$string['appnotbooked'] = 'There was an error, appointment with: $a[teacher] At: $a[apptime] not booked';
+$string['apptime'] = 'Appointment time';
+$string['appointmentlength'] = 'Appointment length /min';
+$string['backtoappointments'] = 'Back to Appointments';
 $string['blockname'] = 'Parents\' Evening';
+$string['bookapps'] = 'Book Parents Evening Appointments';
+$string['busy'] = 'Busy';
 $string['config'] = 'Configure';
+$string['confirmapps'] = 'Confirm Appointments (without this your appointments will not be booked)';
+$string['emptyschedule'] = 'There are currently no appointments booked';
+$string['fail'] = '$a appointments have failed to been made';
+$string['mustcorrect'] = 'You must correct this before you can book appointments';
+$string['newapp'] = 'Add a New Appointment';
 $string['newparentseve'] = 'New Parents\' Evening';
+$string['noappointments'] = 'You have not booked any appointments, press \\\'Add a New Appointment\\\' then select a teacher and time';//the extra //s is to excape the ' in javascript
+$string['noappointmentwith'] = 'There is no time entered for the appointment with ';
 $string['noparentseve'] = 'This Parents\' Evening does not exist';
+$string['noparentname'] = 'You have not entered a parent\\\'s name';//the extra // is to excape the ' in javascript
+$string['nostudentname'] = 'You have not entered a student\\\'s name';//the extra // is to excape the ' in javascript
 $string['oldparentseve'] = 'This parents evening has already taken place.';
+$string['parentname'] = 'Parent\'s name';
 $string['parentseve'] = 'Parents\' Evening';
 $string['parentseveconfig'] = 'Parents Evening Config';
 $string['parentseveinfo'] = 'Additional information';
@@ -12,5 +29,12 @@ $string['parentseveschedule'] = 'Parents Evening Appointments';
 $string['parentseveteachers'] = 'Parents Evening Teachers';
 $string['parentsevesdisabled'] = 'Parents evening features are currently disabled';
 $string['parentname'] = 'Parent\'s name';
+$string['printsave'] = 'Please print/save this page for your records; your identity has not been verified, therefore you will not be able to get this information in the future.';
+$string['schedulefor'] = 'Parents evening schedule for $a';
+$string['studentname'] = 'Student\'s name';
+$string['success'] = '$a appontments have been successfully made';
+$string['teacher'] = 'Teacher';
+$string['timeend'] = 'End time';
+$string['timestart'] = 'Start time';
 
 ?>

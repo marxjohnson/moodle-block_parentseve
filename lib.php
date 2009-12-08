@@ -20,12 +20,12 @@ function parentseve_print_schedule($teacher,$parentseve) {
         return false;
     }
 
-    echo '<h3>'.get_string('schedulefor','termreview',$teacher->firstname.' '.$teacher->lastname).'</h3>
+    echo '<h3>'.get_string('schedulefor','block_parentseve',$teacher->firstname.' '.$teacher->lastname).'</h3>
         <table class="parentseve_schedule">
             <tr>
-                <th class="parentseve_schedule">'.get_string('apptime','termreview').'</th>
-                <th class="parentseve_schedule">'.get_string('parentname','termreview').'</th>
-                <th class="parentseve_schedule">'.get_string('studentname','termreview').'</th>
+                <th class="parentseve_schedule">'.get_string('apptime','block_parentseve').'</th>
+                <th class="parentseve_schedule">'.get_string('parentname','block_parentseve').'</th>
+                <th class="parentseve_schedule">'.get_string('studentname','block_parentseve').'</th>
             </tr>';
     $appcron = array();
 
