@@ -111,3 +111,24 @@ function parentseve_sortselect(select) {
         }
     }
 }
+
+function parentseve_table() {
+        var myColumnDefs = [
+            {key:"date",label:"<?php get_string('date', 'block_parentseve'); ?>",formatter:YAHOO.widget.DataTable.formatDate,sortable:true},
+            {key:"starttime",label:"<?php get_string('timestart', 'block_parentseve'); ?>"},
+            {key:"endtime",label:"<?php get_string('timend', 'block_parentseve'); ?>"}            
+        ];
+
+        this.myDataSource = new YAHOO.util.DataSource(YAHOO.util.Dom.get("parentseves"));
+        this.myDataSource.responseType = YAHOO.util.DataSource.TYPE_HTMLTABLE;
+        this.myDataSource.responseSchema = {
+            fields: [{key:"date", parser:"date"},
+                    {key:"timestart"},
+                    {key:"timend"}
+            ]
+        };
+
+        this.myDataTable = new YAHOO.widget.DataTable("parentseve_table", myColumnDefs, this.myDataSource,
+                {sortedBy:{key:"date",dir:"desc"}}
+        );
+}

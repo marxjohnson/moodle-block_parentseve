@@ -44,8 +44,8 @@ function parentseve_teacher_form($selectedusers, $unselectedusers) {
         <br />';
         check_theme_arrows();
         echo '<p class="arrow_button">
-            <input name="add" id="add" type="button" value="'. $THEME->larrow.'&nbsp;'.get_string('add').'" title="'.get_string('add').'" onclick="termreview_parentseve_addteachers()" /><br />
-            <input name="remove" id="remove" type="button" value="'.get_string('remove').'&nbsp;'.$THEME->rarrow.'" title="'.get_string('remove').'" onclick="termreview_parentseve_removeteachers()"/>
+            <input name="add" id="add" type="button" value="'. $THEME->larrow.'&nbsp;'.get_string('add').'" title="'.get_string('add').'" onclick="parentseve_addteachers()" /><br />
+            <input name="remove" id="remove" type="button" value="'.get_string('remove').'&nbsp;'.$THEME->rarrow.'" title="'.get_string('remove').'" onclick="parentseve_removeteachers()"/>
         </p>
       </td>
       <td valign="top">
@@ -65,7 +65,7 @@ function parentseve_teacher_form($selectedusers, $unselectedusers) {
          <br />
          <label for="searchtext" class="accesshide">'.get_string('search').'</label>
          <input type="text" name="searchtext" id="searchtext" size="30" value="'.$searchtext.'" />
-         <input name="search" id="search" type="button" value="'.get_string('search').'" onclick="termreview_parentseve_teachersearch(YAHOO.util.Dom.get(\'searchtext\').value);" />';
+         <input name="search" id="search" type="button" value="'.get_string('search').'" onclick="parentseve_teachersearch(YAHOO.util.Dom.get(\'searchtext\').value);" />';
 
           if (!empty($searchtext)) {
               echo '<input name="showall" id="showall" type="submit" value="'.get_string('showall').' />'."\n";

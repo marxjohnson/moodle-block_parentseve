@@ -62,10 +62,9 @@ function parentseve_print_schedule($teacher,$parentseve) {
  * @return array array of user objects containing only ids, firstnames and lastnames
  */
 
-function parentseve_get_teachers($peid) {
+function parentseve_get_teachers($parentseve) {
     global $CFG;
 
-    $parentseve = get_record('parentseve', 'id', $peid);
     $sql = 'SELECT id, firstname, lastname
             FROM '.$CFG->prefix.'user
             WHERE id IN('.$parentseve->teachers.')

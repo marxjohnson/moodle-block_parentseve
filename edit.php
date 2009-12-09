@@ -11,12 +11,10 @@
     $id = optional_param('id', 0, PARAM_INT);
     $searchtext = optional_param('searchtext', '', PARAM_TEXT);
 
-    require_once($CFG->wwwroot.'/blocks/parentseve/lib.php');
+    require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
     require_login();
 
-    if ($id) {
-        $parentseve = get_record('parentseve', 'id', $id);
-    }
+    $parentseve = get_record('parentseve', 'id', $id);    
 
     /// Print the page header
     $navlinks = array();
@@ -34,17 +32,15 @@
                   '');
 
     $context = get_context_instance(CONTEXT_SYSTEM);
-    require_capability('mod/block_parentseve:manage', $context);
+    require_capability('block/parentseve:manage', $context);
 
-    //Display tabs
-    parentseve_printtabs($cmid, $termreview, $parentreview, 2);
 
      require_js(array('yui_yahoo',
                     'yui_event',
                     'yui_connection',
                     'yui_dom',
                     'yui_selector',
-                    $CFG->wwwroot.'/mod/termreview/js/lib.js.php'));
+                    $CFG->wwwroot.'/blocks/parentseve/js/lib.js.php'));
 
     require_once $CFG->dirroot.'/blocks/parentseve/parentseve_form.php';
 
@@ -59,17 +55,11 @@
 
     if ($parentseve) {
         $parentseve->appointmentlength = $parentseve->appointmentlength/60;
-        $sql = 'SELECT *
-                FROM mdl_user
-                WHERE id IN ('.$existingparentseve->teachers.')
-                ORDER BY firstname ASC';
-        $selectedusers = get_records_sql($sql);
+        $selectedusers = parentseve_get_teachers($parentseve);
+        $formdata->teachers = implode(',', array_keys($selectedusers));
         $mform->set_data($existingparentseve);
     } else {
-        $formdata = new object();
-        $selectedusers = parentseve_get_teachers($parentseve->id);
-        $formdata->teachers = implode(',', array_keys($selectedusers));
-        $mform->set_data($formdata);
+    	$selectedusers = array();
     }
 
     $unselectedusers = array_diff_key($unselectedusers, $selectedusers);

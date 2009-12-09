@@ -3,20 +3,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-    <TABLE NAME="parentseve" COMMENT="Table to hold instances of parents evenings" NEXT="termreview_parentseve_app">
+    <TABLE NAME="parentseve" COMMENT="Table to hold instances of parents evenings" NEXT="parentseve_app">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="reviewid"/>
-        <FIELD NAME="reviewid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="This will link to a front page parent review" PREVIOUS="id" NEXT="timestart"/>
-        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="in unix timestamp format" PREVIOUS="reviewid" NEXT="timeend"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="timestart"/>        
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="in unix timestamp format" PREVIOUS="id" NEXT="timeend"/>
         <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="in unix timestamp format" PREVIOUS="timestart" NEXT="appointmentlength"/>
         <FIELD NAME="appointmentlength" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="in seconds" PREVIOUS="timeend" NEXT="info"/>
-        <FIELD NAME="info" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="this will be displayed to people booking appointments, probably want to put in a phone number for help and details of where the parents evening will be held" PREVIOUS="appointmentlength"/>
+        <FIELD NAME="info" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="this will be displayed to people booking appointments, probably want to put in a phone number for help and details of where the parents evening will be held" PREVIOUS="appointmentlength" NEXT="teachers"/>
+        <FIELD NAME="teachers" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="A comma-seperated list of user ids for teachers who will be available for this parents evening." PREVIOUS="info"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="parentseve_app" COMMENT="Table to hold all the appointments that have been booked" PREVIOUS="termreview_parentseve_app">
+    <TABLE NAME="parentseve_app" COMMENT="Table to hold all the appointments that have been booked" PREVIOUS="parentseve">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="parentseveid"/>
         <FIELD NAME="parentseveid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="links to termreview_parenteseve" PREVIOUS="id" NEXT="teacherid"/>

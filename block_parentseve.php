@@ -1,8 +1,8 @@
 <?php
 
-require_once($CFG->wwwroot.'/blocks/parentseve/lib.php');
+require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 
-class block_parentseve extends block_base {
+class block_parentseve extends block_list {
 
     function init() {
         $this->title = get_string('parentseve', 'block_parentseve');
@@ -10,9 +10,21 @@ class block_parentseve extends block_base {
     }
 
     function get_content() {
-
+        if ($this->content !== null) {
+          return $this->content;
+        }
         global $CFG;
-        $this->content->footer = '';
+        $context = get_context_instance(CONTEXT_SYSTEM);
+        $this->content = new stdClass;
+        $this->content->items = array();
+        $this->content->icons = array();
+        $this->content->footer = ' ';
+
+        if (has_capability('block/parentseve:manage', $context)) {            
+        	$this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/manage.php">'.get_string('manageparentseve','block_parentseve').'</a>';
+            $this->content->icons[] = '';
+        }        
+
         if(empty($this->config->selected)) {
             $this->config->selected = ',';
         }
