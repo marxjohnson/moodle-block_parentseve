@@ -46,7 +46,7 @@ function parentseve_addteachers() {
         ids.push(selected[i].value);
     }
 
-    termreview_parentseve_sortselect(removeselect); // Sort the remove select
+    parentseve_sortselect(removeselect); // Sort the remove select
     idsvalue = ids.join(',')
     idfield.value = idsvalue; // Save the ids to a hidden field
 

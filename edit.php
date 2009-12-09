@@ -20,17 +20,14 @@
     $navlinks = array();
     $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
     if ($parentseve) {
-        $navlinks[] = array('name' => date($parentseve->timestart, 'l jS M Y'), 'link' => $CFG->wwwroot.'/blocks/parentseve/parentseveschedule.php?id='.$parentseve->id, 'type' => 'activityinstance');
+        $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/parentseveschedule.php?id='.$parentseve->id, 'type' => 'activityinstance');
     } else {
         $navlinks[] = array('name' => get_string('newparentseve', 'block_parentseve'), 'link' => '', 'type' => 'activityinstance');
     }
     $navlinks[] = array('name' => get_string('config', 'block_parentseve'), 'link' => '', 'type' => 'activityinstance');
 
     $navigation = build_navigation($navlinks);
-
-    print_header_simple(get_string('parentseveconfig','block_parentseve'), '', $navigation, "", "", true,
-                  '');
-
+  
     $context = get_context_instance(CONTEXT_SYSTEM);
     require_capability('block/parentseve:manage', $context);
 
@@ -57,13 +54,12 @@
         $parentseve->appointmentlength = $parentseve->appointmentlength/60;
         $selectedusers = parentseve_get_teachers($parentseve);
         $formdata->teachers = implode(',', array_keys($selectedusers));
-        $mform->set_data($existingparentseve);
+        $mform->set_data($parentseve);
     } else {
     	$selectedusers = array();
     }
 
     $unselectedusers = array_diff_key($unselectedusers, $selectedusers);
-    parentseve_teacher_form($selectedusers, $unselectedusers);
 
     if ($newdata = $mform->get_data()) {
         $newdata->appointmentlength = $newdata->appointmentlength*60;
@@ -71,10 +67,15 @@
         if (!empty($parentseve)) {
             $newdata->id = $parentseve->id;
             update_record('parentseve',$newdata);
+            redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
         } else {
             insert_record('parentseve',$newdata);
+            redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
         }
     }
+    
+    print_header_simple(get_string('parentseveconfig','block_parentseve'), '', $navigation, "", "", true, '');
+    parentseve_teacher_form($selectedusers, $unselectedusers);
     $mform->display();
 
 /// Finish the page

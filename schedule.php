@@ -33,8 +33,7 @@
     $navlinks[] = array('name' => date($parentseve->timestart, 'l jS M Y'), 'link' => '', 'type' => 'activityinstance');
     $navigation = build_navigation($navlinks);
 
-    print_header_simple(get_string('parentseveschedule','block_parentseve'), '', $navigation, "", "", true,
-                  '');
+    print_header_simple(get_string('parentseveschedule','block_parentseve'), '', $navigation, "", "", true, '');
 
     //Display tabs
     termreview_printtabs($cmid, $termreview, $parentreview, 3);
@@ -86,7 +85,7 @@
                     $appointment->apptime = $newappointment;
                     $appointment->parentname = $parentname;
                     $appointment->studentname = $studentname;
-                    if(get_record('termreview_parentseve_app','teacherid',$appointment->teacherid,'apptime',$appointment->apptime)==false and insert_record('termreview_parentseve_app',$appointment)) {
+                    if(get_record('parentseve_app','teacherid',$appointment->teacherid,'apptime',$appointment->apptime)==false and insert_record('parentseve_app',$appointment)) {
                         echo get_string('appbooked','block_parentseve',array('teacher'=>$teacher->firstname.' '.$teacher->lastname,'apptime'=>date('G:i',$appointment->apptime))).'<br>';
                         $success++;
                     } else {
