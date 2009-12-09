@@ -10,6 +10,7 @@
 
 function parentseve_print_schedule($teacher,$parentseve) {
     global $CFG;
+    $systemcontext = get_context_instance(CONTEXT_SYSTEM);
 
     $sql = 'SELECT *
             FROM '.$CFG->prefix.'parentseve_app
@@ -20,37 +21,51 @@ function parentseve_print_schedule($teacher,$parentseve) {
         return false;
     }
 
-    echo '<h3>'.get_string('schedulefor','block_parentseve',$teacher->firstname.' '.$teacher->lastname).'</h3>
-        <table class="parentseve_schedule">
-            <tr>
-                <th class="parentseve_schedule">'.get_string('apptime','block_parentseve').'</th>
-                <th class="parentseve_schedule">'.get_string('parentname','block_parentseve').'</th>
-                <th class="parentseve_schedule">'.get_string('studentname','block_parentseve').'</th>
-            </tr>';
-    $appcron = array();
+    echo '<h3 class="parentseve_schedule_header">'.get_string('schedulefor','block_parentseve',$teacher->firstname.' '.$teacher->lastname).'</h3>';
 
+    $table = new flexible_table('parentseveschedule_'.$teacher->id);
+    $columns = array('time', 'parent', 'student');
+    if (has_capability('block/parentseve:cancel', $systemcontext)) {
+        $columns[] = 'cancel';	
+        $table->column_class('cancel', 'function');
+    } 
+    $table->define_columns($columns);
+    $headers = array(get_string('apptime','block_parentseve'), 
+                    get_string('parentname','block_parentseve'), 
+                    get_string('studentname','block_parentseve'));
+    if (has_capability('block/parentseve:cancel', $systemcontext)) {
+        $headers[] = '';
+    }                 
+    $table->define_headers($headers);       
+    $table->sortable(true, 'time', SORT_ASC);
+    $table->set_attribute('class', 'generaltable generalbox parentseve_schedule');    
+    $table->setup();     
+   
+    $appcron = array();
     foreach($appointments as $appointment){
-        $appcron[$appointment->apptime]['parentname']=$appointment->parentname;
-        $appcron[$appointment->apptime]['studentname']=$appointment->studentname;
+        $appcron[$appointment->apptime]['parentname'] = $appointment->parentname;
+        $appcron[$appointment->apptime]['studentname'] = $appointment->studentname;
     }
 
     for($time = $parentseve->timestart; $time < $parentseve->timeend; $time += $parentseve->appointmentlength) {
+        
+        $row = array();
+        $row[] = date('G:i',$time);        
+        $row[] = '';
+        $row[] = '';
+        $row[] = '';
+        
         if(!empty($appcron[$time])) {
-            echo '<tr>
-                    <td class="parentseve_schedule">'.date('G:i',$time).'</td>
-                    <td class="parentseve_schedule">'.$appcron[$time]['parentname'].'</td>
-                    <td class="parentseve_schedule">'.$appcron[$time]['studentname'].'</td>
-                </tr>';
-        } else {
-            echo '<tr>
-                    <td class="parentseve_schedule">'.date('G:i',$time).'</td>
-                    <td class="parentseve_schedule"></td>
-                    <td class="parentseve_schedule"></td>
-                </tr>';
-        }
+            $row[1] = $appcron[$time]['parentname'];
+            $row[2] = $appcron[$time]['studentname'];
+            if (has_capability('block/parentseve:cancel', $systemcontext)) {
+                $row[3] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/cancel.php?id='.$appointment->id.'">'.get_string('cancel').'</a>';
+            }  
+        }        
+        
+        $table->add_data($row);
     }
-
-    echo '</table>';
+    $table->print_html();
 
     return true;
 }
@@ -80,8 +95,8 @@ function parentseve_get_teachers($parentseve) {
  * @return bool is the user a teacher on the list?
  */
 
-function parentseve_isteacher($userid,$peid) {
-    $parentseve = get_record('parentseve','id',$peid);
+function parentseve_isteacher($userid, $parentseve) {
+    $parentseve = get_record('parentseve', 'id', $parentseve);
     $teachers = explode(',',$parentseve->teachers);
 
     if (array_search($userid,$teachers) === false) {

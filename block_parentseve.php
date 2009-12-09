@@ -6,7 +6,7 @@ class block_parentseve extends block_list {
 
     function init() {
         $this->title = get_string('parentseve', 'block_parentseve');
-        $this->version = 2009113000;
+        $this->version = 2009120900;
     }
 
     function get_content() {
@@ -23,7 +23,19 @@ class block_parentseve extends block_list {
         if (has_capability('block/parentseve:manage', $context)) {            
         	$this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/manage.php">'.get_string('manageparentseve','block_parentseve').'</a>';
             $this->content->icons[] = '';
-        }        
+        }
+        
+        if (has_capability('block/parentseve:book', $context)) {
+            $parentseves = get_records_select('parentseve', 'timestart > '.time());
+            foreach($parentseves as $parentseve) {
+                $this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$parentseve->id.'">'.date('l jS M Y', $parentseve->timestart).'</a>';
+                $this->content->icons[] = '<img src="'.$CFG->pixpath.'/i/item.gif" />';
+                if (has_capability('block/parentseve:viewall', $context)) {
+                	$this->content->items[] = '- <a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id.'">'.get_string('myapps', 'block_parentseve').'</a>';
+                    $this->content->icons[] = '';
+                }	
+            }
+        }
 
         if(empty($this->config->selected)) {
             $this->config->selected = ',';

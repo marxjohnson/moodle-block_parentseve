@@ -15,6 +15,7 @@ $string['emptyschedule'] = 'There are currently no appointments booked';
 $string['fail'] = '$a appointments have failed to been made';
 $string['manageparentseve'] = 'Manage Parents\' Evenings';
 $string['mustcorrect'] = 'You must correct this before you can book appointments';
+$string['myapps'] = 'View My Appointments';
 $string['newapp'] = 'Add a New Appointment';
 $string['newparentseve'] = 'New Parents\' Evening';
 $string['noappointments'] = 'You have not booked any appointments, press \\\'Add a New Appointment\\\' then select a teacher and time';//the extra //s is to excape the ' in javascript
