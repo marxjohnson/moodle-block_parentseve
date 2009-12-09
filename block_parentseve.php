@@ -6,7 +6,7 @@ class block_parentseve extends block_list {
 
     function init() {
         $this->title = get_string('parentseve', 'block_parentseve');
-        $this->version = 2009120900;
+        $this->version = 2009120901;
     }
 
     function get_content() {

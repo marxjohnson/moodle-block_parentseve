@@ -3,12 +3,18 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 $id = required_param('id', PARAM_INT);   
+$config = get_config('block/parentseve');
+$context = get_context_instance(CONTEXT_SYSTEM);
+
+if(!$config->allowanon) {
+	require_login();
+    require_capability('block/parentseve:book', $context);
+}
 
 if (!$parentseve = get_record('parentseve', 'id', $id)) {
     print_error('noparentseve', 'block_parentseve');
 }
 
-$context = get_context_instance(CONTEXT_SYSTEM);
 if(!has_capability('block/parentseve:manage', $context) && $parentseve->timeend < time()) {
     print_error('oldparentseve', 'block_parentseve');
 }

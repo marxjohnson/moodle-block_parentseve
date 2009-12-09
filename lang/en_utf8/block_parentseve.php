@@ -1,4 +1,6 @@
 <?php
+$string['allowanon'] = 'Allow anonymous users';
+$string['allowanon_explain'] = 'If this setting is checked, anyone who knows the URL can book an appointment (so parents don\'t have to have an account). Otherwise, only users with parentseve:book can access the page.';
 $string['appbooked'] = 'Appointment with: $a[teacher] At: $a[apptime] booked';
 $string['appnotbooked'] = 'There was an error, appointment with: $a[teacher] At: $a[apptime] not booked';
 $string['apptime'] = 'Appointment time';
