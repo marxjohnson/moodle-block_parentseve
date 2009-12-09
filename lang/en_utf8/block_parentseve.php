@@ -2,6 +2,7 @@
 $string['appbooked'] = 'Appointment with: $a[teacher] At: $a[apptime] booked';
 $string['appnotbooked'] = 'There was an error, appointment with: $a[teacher] At: $a[apptime] not booked';
 $string['apptime'] = 'Appointment time';
+$string['appointmentcancel'] = 'You have requested to cancel an appointment with $a->teacher at $a->time on $a->date.';
 $string['appointmentlength'] = 'Appointment length /min';
 $string['backtoappointments'] = 'Back to Appointments';
 $string['blockname'] = 'Parents\' Evening';
@@ -10,14 +11,15 @@ $string['busy'] = 'Busy';
 $string['createnew'] = 'Create New Parents\' Evening';
 $string['config'] = 'Configure';
 $string['confirmapps'] = 'Confirm Appointments (without this your appointments will not be booked)';
+$string['confirmcancel'] = 'Are you sure you want to cancel this appointment? This cannot be undone!';
 $string['date'] = 'Date';
 $string['emptyschedule'] = 'There are currently no appointments booked';
 $string['fail'] = '$a appointments have failed to been made';
 $string['manageparentseve'] = 'Manage Parents\' Evenings';
 $string['mustcorrect'] = 'You must correct this before you can book appointments';
-$string['myapps'] = 'View My Appointments';
 $string['newapp'] = 'Add a New Appointment';
 $string['newparentseve'] = 'New Parents\' Evening';
+$string['noappointment'] = 'The specified appointment does not exist. It may already have been cancelled.';
 $string['noappointments'] = 'You have not booked any appointments, press \\\'Add a New Appointment\\\' then select a teacher and time';//the extra //s is to excape the ' in javascript
 $string['noappointmentwith'] = 'There is no time entered for the appointment with ';
 $string['noparentseve'] = 'This Parents\' Evening does not exist';
@@ -44,5 +46,6 @@ $string['success'] = '$a appontments have been successfully made';
 $string['teacher'] = 'Teacher';
 $string['timeend'] = 'End time';
 $string['timestart'] = 'Start time';
+$string['viewapps'] = 'View Appointments';
 
 ?>

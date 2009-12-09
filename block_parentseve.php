@@ -13,7 +13,7 @@ class block_parentseve extends block_list {
         if ($this->content !== null) {
           return $this->content;
         }
-        global $CFG;
+        global $CFG, $USER;
         $context = get_context_instance(CONTEXT_SYSTEM);
         $this->content = new stdClass;
         $this->content->items = array();
@@ -28,17 +28,14 @@ class block_parentseve extends block_list {
         if (has_capability('block/parentseve:book', $context)) {
             $parentseves = get_records_select('parentseve', 'timestart > '.time());
             foreach($parentseves as $parentseve) {
-                $this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$parentseve->id.'">'.date('l jS M Y', $parentseve->timestart).'</a>';
+                $this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$parentseve->id.'">'.date('D jS M Y', $parentseve->timestart).'</a>';
                 $this->content->icons[] = '<img src="'.$CFG->pixpath.'/i/item.gif" />';
-                if (has_capability('block/parentseve:viewall', $context)) {
-                	$this->content->items[] = '- <a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id.'">'.get_string('myapps', 'block_parentseve').'</a>';
+                if (parentseve_isteacher($USER->id, $parentseve) || has_capability('block/parentseve:viewall', $context)) {
+                	$this->content->items[] = '&nbsp;&nbsp;&nbsp;&ndash; <a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id.'">'.get_string('viewapps', 'block_parentseve').'</a>';
                     $this->content->icons[] = '';
-                }	
+                }
+                
             }
-        }
-
-        if(empty($this->config->selected)) {
-            $this->config->selected = ',';
         }
 
         return $this->content;
@@ -47,22 +44,6 @@ class block_parentseve extends block_list {
 
     function has_config() {
         return true;
-    }
-
-    function config_save($data) {
-
-    }
-
-    function is_empty() {
-
-        if (empty($this->instance->pinned)) {
-            $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
-        } else {
-            $context = get_context_instance(CONTEXT_SYSTEM); // pinned blocks do not have own context
-        }
-
-        $this->get_content();
-        return(empty($this->content->text) && empty($this->content->footer));
     }
 
 }

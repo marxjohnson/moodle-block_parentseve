@@ -45,6 +45,7 @@ function parentseve_print_schedule($teacher,$parentseve) {
     foreach($appointments as $appointment){
         $appcron[$appointment->apptime]['parentname'] = $appointment->parentname;
         $appcron[$appointment->apptime]['studentname'] = $appointment->studentname;
+        $appcron[$appointment->apptime]['id'] = $appointment->id;
     }
 
     for($time = $parentseve->timestart; $time < $parentseve->timeend; $time += $parentseve->appointmentlength) {
@@ -57,9 +58,9 @@ function parentseve_print_schedule($teacher,$parentseve) {
         
         if(!empty($appcron[$time])) {
             $row[1] = $appcron[$time]['parentname'];
-            $row[2] = $appcron[$time]['studentname'];
-            if (has_capability('block/parentseve:cancel', $systemcontext)) {
-                $row[3] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/cancel.php?id='.$appointment->id.'">'.get_string('cancel').'</a>';
+            $row[2] = $appcron[$time]['studentname'];            
+            if (has_capability('block/parentseve:cancel', $systemcontext)) {                
+                $row[3] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/cancel.php?id='.$appcron[$time]['id'].'">'.get_string('cancel').'</a>';
             }  
         }        
         
@@ -96,7 +97,7 @@ function parentseve_get_teachers($parentseve) {
  */
 
 function parentseve_isteacher($userid, $parentseve) {
-    $parentseve = get_record('parentseve', 'id', $parentseve);
+    $parentseve = get_record('parentseve', 'id', $parentseve->id);
     $teachers = explode(',',$parentseve->teachers);
 
     if (array_search($userid,$teachers) === false) {

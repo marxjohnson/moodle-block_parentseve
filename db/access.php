@@ -29,17 +29,7 @@ $block_parentseve_capabilities = array(
             'admin' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW
         )
-    ),
-    
-    'block/parentseve:view' => array(
-        // View own bookings
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'admin' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW            
-        )
-    ),
+    ),    
 
     'block/parentseve:viewall' => array(
         // View all bookings
