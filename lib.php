@@ -78,13 +78,12 @@ function parentseve_print_schedule($teacher,$parentseve) {
  */
 
 function parentseve_get_teachers($parentseve) {
-    global $CFG;
-
-    $sql = 'SELECT id, firstname, lastname
-            FROM '.$CFG->prefix.'user
-            WHERE id IN('.$parentseve->teachers.')
-            ORDER BY lastname';
-    return get_records_sql($sql);
+    if(!empty($parentseve->teachers)) {
+        return get_records_select('user', 'id IN('.$parentseve->teachers.')', '', 'id, firstname, lastname');	
+    } else {
+    	return array();
+    }
+    
 }
 
 /**
@@ -104,6 +103,11 @@ function parentseve_isteacher($userid, $parentseve) {
     } else {
         return true;
     }
+}
+
+function parentseve_search_filter($user) {
+    global $searchtext;
+    return stristr(fullname($user), $searchtext);
 }
 
 ?>

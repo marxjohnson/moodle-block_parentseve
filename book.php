@@ -46,7 +46,7 @@ if(empty($parentname)) {
     add_to_log(0, 'parentseve', 'View booking form', $CFG->wwwroot.'/blocks/parentseve/book.php?id='.$id, $id);
     echo get_string('parentseveon', 'block_parentseve', array('date'=>date('l jS F Y',$parentseve->timestart))).'<p class="_info">'.$parentseve->info.'</p>
         <noscript>This page requires javascript to be enabled</noscript><!--TODO:lang-->
-        <script type="text/javascript" src="'.$CFG->wwwroot.'/blocks/parentseve/book.js.php?id='.$parentseve->id.'">
+        <script type="text/javascript" src="'.$CFG->wwwroot.'/blocks/parentseve/js/book.js.php?id='.$parentseve->id.'">
 
         </script>
         <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/book.php" id="parentseve_form" onSubmit="return parentseve_validate(this)" >

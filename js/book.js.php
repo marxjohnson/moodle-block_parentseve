@@ -1,5 +1,5 @@
 <?php
-        require_once('../../config.php');
+        require_once('../../../config.php');
         require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
         $id = required_param('id', PARAM_INT); // Parents evening ID
         $parentseve = get_record('parentseve', 'id', $id);

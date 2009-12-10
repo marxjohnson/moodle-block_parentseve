@@ -10,6 +10,17 @@
 
     $id = optional_param('id', 0, PARAM_INT);
     $searchtext = optional_param('searchtext', '', PARAM_TEXT);
+    $removeusers = optional_param('removeselect', array(), PARAM_CLEAN);
+    $add = optional_param('add', null, PARAM_TEXT);
+    $remove = optional_param('remove', null, PARAM_TEXT);    
+    $addusers = optional_param('addselect', array(), PARAM_CLEAN);
+    $removeusers = optional_param('removeselect', array(), PARAM_CLEAN);      
+    $teachers = optional_param('teachers', '', PARAM_TEXT);    
+    if (!empty($teachers)) {
+    	$teachers = explode(',', $teachers);
+    } else {
+    	$teachers = array();
+    }
 
     require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
     require_login();
@@ -52,15 +63,49 @@
             ORDER BY firstname ASC';
     $unselectedusers = get_records_sql($sql);
 
+    $selectedusers = array();
     if ($parentseve) {
-        $parentseve->appointmentlength = $parentseve->appointmentlength/60;
-        $selectedusers = parentseve_get_teachers($parentseve);
-        $formdata->teachers = implode(',', array_keys($selectedusers));
-        $mform->set_data($parentseve);
+        $formdata = $parentseve;
+        $formdata->appointmentlength = $parentseve->appointmentlength/60;
+        if (!empty($add) && !empty($remove)) {
+            $selectedusers = parentseve_get_teachers($parentseve);	
+        }                
+        if (!empty($teachers)) {
+            $selectedusers = array_merge($selectedusers, get_records_select('user', 'id IN ('.implode(',', $teachers).')', 'firstname ASC', 'id, firstname, lastname'));	
+        }
     } else {
-    	$selectedusers = array();
+        $formdata = new stdClass;
     }
 
+    if (!empty($add)) {
+    	if (!empty($addusers)) {
+            $addteachers = get_records_select('user', 'id IN ('.implode(',', $addusers).')', 'firstname ASC', 'id, firstname, lastname');   
+        } else {
+            $addteachers = array();
+        }
+        $selectedusers = array_merge($selectedusers, $addteachers);
+    }
+    if(!empty($selectedusers)) {
+        $rekey = $selectedusers;
+        $selectedusers = array();
+        foreach ($rekey as $user) {
+            $selectedusers[$user->id] = $user;
+        }
+        unset($rekey);
+    }   
+     
+    if (!empty($remove)){
+    	if (!empty($removeusers)) {            
+            $removeteachers = get_records_select('user', 'id IN ('.implode(',', $removeusers).')', 'firstname ASC', 'id, firstname, lastname');   
+        } else {
+            $removeteachers = array();
+        }
+        $selectedusers = array_diff_key($selectedusers, $removeteachers);
+    }    
+    
+    $formdata->teachers = implode(',', array_keys($selectedusers));        
+    $mform->set_data($formdata);
+    
     $unselectedusers = array_diff_key($unselectedusers, $selectedusers);
 
     if ($newdata = $mform->get_data()) {
@@ -75,10 +120,11 @@
             redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
         }
     }
-    
+        
     print_header_simple(get_string('parentseveconfig','block_parentseve'), '', $navigation, "", "", true, '');
-    parentseve_teacher_form($selectedusers, $unselectedusers);
+    parentseve_teacher_form($selectedusers, $unselectedusers, $searchtext);
     $mform->display();
+    
 
 /// Finish the page
     print_footer();
