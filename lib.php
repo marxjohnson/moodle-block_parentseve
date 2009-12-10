@@ -36,8 +36,7 @@ function parentseve_print_schedule($teacher,$parentseve) {
     if (has_capability('block/parentseve:cancel', $systemcontext)) {
         $headers[] = '';
     }                 
-    $table->define_headers($headers);       
-    $table->sortable(true, 'time', SORT_ASC);
+    $table->define_headers($headers); 
     $table->set_attribute('class', 'generaltable generalbox parentseve_schedule');    
     $table->setup();     
    

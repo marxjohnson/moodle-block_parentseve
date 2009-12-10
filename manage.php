@@ -31,7 +31,7 @@ $table->define_headers(array(get_string('date', 'block_parentseve'),
                             get_string('timeend', 'block_parentseve'), 
                             '', 
                             ''));
-$table->sortable(true, 'date', SORT_DESC);
+$table->initialbars(true);
 $table->set_attribute('id', 'parentseves');
 $table->set_attribute('class', 'generaltable generalbox');
 $table->setup();
