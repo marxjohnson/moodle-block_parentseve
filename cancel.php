@@ -2,8 +2,8 @@
 require_once('../../config.php');
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
-$systemcontext = get_context_instance(CONTEXT_SYSTEM);
-require_capability('block/parentseve:cancel', $systemcontext);
+$context = get_context_instance(CONTEXT_SYSTEM);
+require_capability('block/parentseve:cancel', $context);
 $app_sql = 'SELECT a.id, a.parentseveid, a.apptime, t.firstname, t.lastname
             FROM '.$CFG->prefix.'parentseve_app AS a
                 JOIN '.$CFG->prefix.'user AS t ON a.teacherid = t.id
@@ -16,8 +16,16 @@ if ($app) {
         redirect($CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id);
     } else {
         $navlinks = array();
-        $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
-        $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');
+        if(has_capability('block/parentseve:manage', $context)) {
+            $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity'); 
+        } else {
+            $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+        }
+        if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
+            $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id, 'type' => 'activityinstance');   
+        } else {
+            $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');    
+        }
         $navlinks[] = array('name' => get_string('cancel'), 'link' => '', 'type' => 'activityinstance');
         $navigation = build_navigation($navlinks);
         

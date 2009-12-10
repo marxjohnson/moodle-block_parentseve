@@ -9,6 +9,7 @@ $string['appointmentlength'] = 'Appointment length /min';
 $string['backtoappointments'] = 'Back to Appointments';
 $string['blockname'] = 'Parents\' Evening';
 $string['bookapps'] = 'Book Parents Evening Appointments';
+$string['book'] = 'Book Appointments';
 $string['busy'] = 'Busy';
 $string['createnew'] = 'Create New Parents\' Evening';
 $string['config'] = 'Configure';

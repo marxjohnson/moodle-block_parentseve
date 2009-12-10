@@ -15,7 +15,6 @@ require_js(array('yui_yahoo',
 
 $navlinks = array();
 $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
-$navlinks[] = array('name' => get_string('manageparentseve', 'block_parentseve'), 'type' => 'activity');
 $navigation = build_navigation($navlinks);
 
 print_header_simple(get_string('manageparentseve', 'block_parentseve'), '', $navigation, "", "", true, '');

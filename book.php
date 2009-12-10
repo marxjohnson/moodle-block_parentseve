@@ -25,8 +25,17 @@ $newappointments = optional_param('appointment', null, PARAM_TEXT);
 $newappointmentteachers = optional_param('appointmentteacher', null, PARAM_TEXT);
 
 $navlinks = array();
-$navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
-$navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');
+if(has_capability('block/parentseve:manage', $context)) {
+    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity');	
+} else {
+    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+}
+if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
+    $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id, 'type' => 'activityinstance');	
+} else {
+    $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');	
+}
+$navlinks[] = array('name' => get_string('book', 'block_parentseve'), 'link' => '', 'type' => 'activityinstance');
 $navigation = build_navigation($navlinks);
 
 print_header_simple(get_string('bookapps','block_parentseve'), '', $navigation, "", "", true, '');

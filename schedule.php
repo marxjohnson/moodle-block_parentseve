@@ -25,7 +25,11 @@
 /// Print the page header
 
     $navlinks = array();
-    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+    if(has_capability('block/parentseve:manage', $context)) {
+        $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity'); 
+    } else {
+        $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+    }
     $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');
     $navigation = build_navigation($navlinks);
 

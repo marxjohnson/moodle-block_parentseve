@@ -15,12 +15,14 @@
     require_login();
 
     $parentseve = get_record('parentseve', 'id', $id);    
-
+    $context = get_context_instance(CONTEXT_SYSTEM);
+    require_capability('block/parentseve:manage', $context);
     /// Print the page header
     $navlinks = array();
-    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity'); 
+
     if ($parentseve) {
-        $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/parentseveschedule.php?id='.$parentseve->id, 'type' => 'activityinstance');
+        $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id, 'type' => 'activityinstance');
     } else {
         $navlinks[] = array('name' => get_string('newparentseve', 'block_parentseve'), 'link' => '', 'type' => 'activityinstance');
     }

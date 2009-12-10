@@ -1,7 +1,7 @@
 <?php
 require_once('../../config.php');
-$systemcontext = get_context_instance(CONTEXT_SYSTEM);
-require_capability('block/parentseve:manage', $systemcontext);
+$context = get_context_instance(CONTEXT_SYSTEM);
+require_capability('block/parentseve:manage', $context);
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 $parentseve = get_record('parentseve', 'id', $id);
@@ -12,8 +12,16 @@ if ($parentseve) {
         redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
     } else {
         $navlinks = array();
-        $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
-        $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');
+        if(has_capability('block/parentseve:manage', $context)) {
+            $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity'); 
+        } else {
+            $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+        }
+        if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
+            $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id, 'type' => 'activityinstance');   
+        } else {
+            $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');    
+        }
         $navlinks[] = array('name' => get_string('delete'), 'link' => '', 'type' => 'activityinstance');
         $navigation = build_navigation($navlinks);
         
