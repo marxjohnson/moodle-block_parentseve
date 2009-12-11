@@ -16,10 +16,14 @@
     $addusers = optional_param('addselect', array(), PARAM_CLEAN);
     $removeusers = optional_param('removeselect', array(), PARAM_CLEAN);      
     $teachers = optional_param('teachers', '', PARAM_TEXT);    
+    $showall = optional_param('showall', false, PARAM_TEXT);
     if (!empty($teachers)) {
     	$teachers = explode(',', $teachers);
     } else {
     	$teachers = array();
+    }
+    if ($showall) {
+    	$searchtext = '';
     }
 
     require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
