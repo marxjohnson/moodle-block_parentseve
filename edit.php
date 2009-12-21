@@ -1,14 +1,22 @@
 <?php
 /**
  * A page for managers to configure parents eves
+ * 
+ * Displays a list of users on the system for selection as teachers for this parent's evening,
+ * using {@see parentseve_teacher_form()}, and a form for configuration of date, time and
+ * appointment length using {@see parentseve_form}.
  *
- * @author Mike Worth, Mark Johnson
+ * @author Mike Worth, Mark Johnson <johnsom@tauntons.ac.uk>
  * @copyright Copyright &copy; 2009 Taunton's College
- * @package parentseve
- **/
+ * @package block_parentseve
+ * @param id int The ID of an existing parents' evening for editing
+ */
     require_once('../../config.php');
 
     $id = optional_param('id', 0, PARAM_INT);
+    /**
+     * @var string $searchtext The text to filter the list of potential teachers by
+     */
     $searchtext = optional_param('searchtext', '', PARAM_TEXT);
     $removeusers = optional_param('removeselect', array(), PARAM_CLEAN);
     $add = optional_param('add', null, PARAM_TEXT);

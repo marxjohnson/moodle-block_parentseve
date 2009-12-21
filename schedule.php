@@ -1,10 +1,12 @@
 <?php
 /**
- * A page to display schedules for a parents eve to teachers and managers, and allow anyone else to make appontments
+ * A page to display schedules for a parents eve to teachers and managers, 
+ * and allow anyone else to make appontments.
  *
- * @author Mike Worth, Mark Johnson
- * @copyright Copyright &copy; 2009 Taunton's College
- * @package parentseve
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ * @param int $id The ID of the parent's evening
  **/
 
     require_once('../../config.php');

@@ -1,4 +1,17 @@
 <?php
+/**
+ * Deletes a parents' evening
+ * 
+ * Much like {@see cancel.php}, this displays a confirmation form which, once submitted,
+ * will delete and entire parents' evening and associated appointments.
+ * 
+ * @package block_parenteseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ * @param int id The ID of the parents' evening record to delete
+ * @param int confirm Whether the deletion has been confirmed 
+ */
+
 require_once('../../config.php');
 $context = get_context_instance(CONTEXT_SYSTEM);
 require_capability('block/parentseve:manage', $context);

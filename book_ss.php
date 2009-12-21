@@ -1,4 +1,15 @@
 <?php
+/**
+ * The server side code for creating a new bookings list
+ * 
+ * Takes the parent's evening and teacher ID, and creates a list of appointment times for the teacher
+ * 
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ * @param int id The ID of the parent's evening
+ * @param int teacher The ID of the teacher
+ */
     require_once('../../config.php');
     require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
     $id = required_param('id', PARAM_INT); // Parents evening ID

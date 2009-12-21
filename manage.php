@@ -1,4 +1,15 @@
 <?php
+/**
+ * Manage parents' evenings
+ * 
+ * Displays a list of parents' evenings with dates and time, 
+ * along with links to edit, delete, and create them.
+ * 
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ */
+
 require_once '../../config.php';
 require $CFG->libdir.'/tablelib.php';
 

@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * Display the appointment booking form
+ * 
+ * Displays a page containing fields for the student's and parent's name, 
+ * along with a button to add a new appointment. The button uses an AJAX call to {@see book_ss.php}
+ * to display a list of teachers and times for each requested appointment.
+ * 
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @copyright Copyright &copy; 2009 Taunton's College, Southampton, UK
+ * @param int id The ID of the parents' evening
+ */
 require_once('../../config.php');
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 $id = required_param('id', PARAM_INT);   

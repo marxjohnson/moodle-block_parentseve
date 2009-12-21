@@ -6,6 +6,7 @@
 ?>
 var i = 0;
 var appsdeleted = new Array();
+
 function newAppointment(){
     var newapp = document.createElement('div');
     newapp.id = 'parentseve_appointment'+i;
