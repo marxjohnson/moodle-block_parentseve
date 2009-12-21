@@ -60,6 +60,10 @@ class block_parentseve extends block_list {
         return $this->content;
 
     }
+ 
+    function applicable_formats() {
+        return array('site-index' => true);
+    }
 
 }
 
