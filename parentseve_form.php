@@ -1,7 +1,27 @@
 <?php
+/**
+ * Defines forms for {@see edit.php}
+ * 
+ * Defines {@see parentseve_form} and {@see parenteseve_teacher_form()} for displaying
+ * forms in edit.php, used for creating and editing of parents' evenings.
+ * 
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ */
+
 require_once ($CFG->libdir.'/formslib.php');
+
+/**
+ * Defines the configuration form
+ * 
+ */
 class parentseve_form extends moodleform {
-        function definition() {
+    
+    /**
+     * Defines the form elements
+     */
+    function definition() {
         $mform    =& $this->_form;
         $mform->addElement('hidden','id');
         $mform->addElement('hidden','cmid');
@@ -13,10 +33,24 @@ class parentseve_form extends moodleform {
 
         $mform->addElement('hidden', 'teachers', null, array('id' => 'id_teachers'));
 
-    $this->add_action_buttons(false);
+        $this->add_action_buttons(false);
     }
 }
 
+/**
+ * Displays the teacher form
+ * 
+ * Displays a form for selecting teachers for the parents' evening using a {@link http://docs.moodle.org/en/Development:Big_Select_List Big Select List}
+ * A comma-seperated list of teachers is stored in the hidden 'teachers' field, 
+ * which is also copied to the configuration form.
+ * 
+ * @global object $CFG Configuration object
+ * @global object $THEME Theme object
+ * @global int $id the ID of the parents' evening.
+ * @param array $selectedusers An array of users that have already been selected
+ * @param array $unselectedusers An array of users that haven't been selected
+ * @param string $searchtext A string to filter unselected users by.
+ */
 function parentseve_teacher_form($selectedusers, $unselectedusers, $searchtext = '') {
     global $CFG, $THEME, $id;
     $rekey = $selectedusers;

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Cancels an appointment
+ * 
+ * Allows users with parentseve:cancel to cancel an appointment that's been made.
+ * Displays a confirmation form which submits back to this page. If deletion is confirmed,
+ * the record for the appointment is deleted.
+ * 
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ * @param int id The ID of the appointment being deleted
+ * @param bool confirm Whether cancellation has been confirmed
+ */
+
 require_once('../../config.php');
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);

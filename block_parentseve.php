@@ -1,14 +1,33 @@
 <?php
-
+/**
+ * Defines the class for the block
+ * 
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK  
+ */
+ 
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 
+/**
+ * The class definition for the block
+ */
 class block_parentseve extends block_list {
 
+    /**
+     * Initalise the block - set the title and version
+     */
     function init() {
         $this->title = get_string('parentseve', 'block_parentseve');
         $this->version = 2009120901;
     }
 
+    /**
+     * Display the block
+     * 
+     * Displays a block containing a list of links to the current parents' evenings
+     * If the user has parentseve:manage, also displays a link to the admin interface.
+     */
     function get_content() {
         if ($this->content !== null) {
           return $this->content;
@@ -41,9 +60,9 @@ class block_parentseve extends block_list {
         return $this->content;
 
     }
-
-    function has_config() {
-        return true;
+ 
+    function applicable_formats() {
+        return array('site-index' => true);
     }
 
 }
