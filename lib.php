@@ -95,7 +95,7 @@ function parentseve_print_schedule($teacher,$parentseve) {
 
 function parentseve_get_teachers($parentseve) {
     if(!empty($parentseve->teachers)) {
-        return get_records_select('user', 'id IN('.$parentseve->teachers.')', '', 'lastname, firstname');
+        return get_records_select('user', 'id IN('.$parentseve->teachers.')', 'lastname, firstname', 'id, lastname, firstname');
     } else {
     	return array();
     }
