@@ -6,11 +6,41 @@ $context = get_context_instance(CONTEXT_SYSTEM);
 require_capability('block/parentseve:manage', $context);
 
 $id = optional_param('id', 0, PARAM_INT);
+$showall = optional_param('showall', false, PARAM_BOOL);
 $searchtext = optional_param('searchtext', '', PARAM_TEXT);
+$add = optional_param('add', '', PARAM_TEXT);
+$remove = optional_param('remove', '', PARAM_TEXT);
+
+if($showall) {
+   $searchtext = '';
+}
 
 if (!$parentseve = get_record('parentseve', 'id', $id)) {
     print_error('noparentseve', 'block_parentseve');
 }
+
+if(!empty($add)) {
+    $newteachers = optional_param('addselect', array(), PARAM_TEXT);
+    foreach ($newteachers as $newteacher) {
+        $teacher = new stdClass;
+        $teacher->parentseveid = $parentseve->id;
+        $teacher->userid = $newteacher;
+        $teacher->id = insert_record('parentseve_teacher', $teacher);
+    }
+}
+
+if(!empty($remove)) {
+    $oldteachers = optional_param('removeselect', array(), PARAM_TEXT);
+    foreach ($oldteachers as $oldteacher) {
+        if($teacher = get_record('parentseve_teacher', 'parentseveid', $parentseve->id, 'userid', $oldteacher)) {
+            delete_records('parentseve_teacher', 'id', $teacher->id);
+        }
+    }
+
+}
+
+
+
 $navlinks = array();
 $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity');
 
@@ -20,8 +50,8 @@ $navlinks[] = array('name' => get_string('config', 'block_parentseve'), 'link' =
 
 $navigation = build_navigation($navlinks);
 
-$where = 'CONCAT(firstname, " ", lastname) LIKE "%'.$searchtext.'%"';
-$order = 'firstname ASC';
+$where = 'CONCAT(firstname, " ", lastname) LIKE "%'.$searchtext.'%" AND deleted = 0';
+$order = 'firstname, lastname ASC';
 $users = get_records_select('user', $where, $order);
 
 $select = 'SELECT u.* ';
@@ -90,8 +120,7 @@ echo '<form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/teachers.p
          <br />
          <label for="searchtext" class="accesshide">'.get_string('search').'</label>
          <input type="text" name="searchtext" id="searchtext" size="30" value="'.$searchtext.'" />
-         <input name="search" id="search" type="submit" value="'.get_string('search').'" title="'.get_string('search').'" />
-         <input name="teachers" type="hidden" value="'.implode(',', array_keys($selectedusers)).'" />';
+         <input name="search" id="search" type="submit" value="'.get_string('search').'" title="'.get_string('search').'" />';
           if (!empty($searchtext)) {
               echo '<input name="showall" id="showall" type="submit" value="'.get_string('showall').'" />'."\n";
           }

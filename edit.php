@@ -37,9 +37,11 @@
     require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
     require_login();
 
-    $parentseve = get_record('parentseve', 'id', $id);    
-
+    $context = get_context_instance(CONTEXT_SYSTEM);
     require_capability('block/parentseve:manage', $context);
+
+    $parentseve = get_record('parentseve', 'id', $id);
+    
     /// Print the page header
     $navlinks = array();
     $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity'); 
@@ -52,9 +54,6 @@
     $navlinks[] = array('name' => get_string('config', 'block_parentseve'), 'link' => '', 'type' => 'activityinstance');
 
     $navigation = build_navigation($navlinks);
-  
-    $context = get_context_instance(CONTEXT_SYSTEM);
-    require_capability('block/parentseve:manage', $context);
 
 
      require_js(array('yui_yahoo',
