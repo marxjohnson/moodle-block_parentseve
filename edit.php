@@ -38,7 +38,7 @@
     require_login();
 
     $parentseve = get_record('parentseve', 'id', $id);    
-    $context = get_context_instance(CONTEXT_SYSTEM);
+
     require_capability('block/parentseve:manage', $context);
     /// Print the page header
     $navlinks = array();
@@ -134,7 +134,6 @@
     }
         
     print_header_simple(get_string('parentseveconfig','block_parentseve'), '', $navigation, "", "", true, '');
-    parentseve_teacher_form($selectedusers, $unselectedusers, $searchtext);
     $mform->display();
     
 

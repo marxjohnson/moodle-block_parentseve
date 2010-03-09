@@ -34,14 +34,13 @@ echo '<h2>'.get_string('manageparentseve', 'block_parentseve').'</h2>
         <p><a href="'.$CFG->wwwroot.'/blocks/parentseve/edit.php">'.get_string('createnew', 'block_parentseve').'</a></p>';
     
 $table = new flexible_table('parentseves');
-$table->define_columns(array('date', 'timestart', 'timeend', 'edit', 'delete'));
+$table->define_columns(array('date', 'timestart', 'timeend', 'teachers', 'edit', 'delete'));
 $table->column_class('edit', 'function');
 $table->column_class('delete', 'function');
 $table->define_headers(array(get_string('date', 'block_parentseve'), 
                             get_string('timestart', 'block_parentseve'), 
                             get_string('timeend', 'block_parentseve'), 
-                            '', 
-                            ''));
+                            '', '', ''));
 $table->initialbars(true);
 $table->set_attribute('id', 'parentseves');
 $table->set_attribute('class', 'generaltable generalbox');
@@ -51,6 +50,7 @@ foreach ($parentseves as $parentseve) {
     $row[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id.'">'.date('d/m/Y', $parentseve->timestart).'</a>';
     $row[] = date('H:i', $parentseve->timestart);
     $row[] = date('H:i', $parentseve->timeend);
+    $row[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/teachers.php?id='.$parentseve->id.'">'.get_string('manageteachers', 'block_parentseve').'</a>';
     $row[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/edit.php?id='.$parentseve->id.'">'.get_string('edit').'</a>';
     $row[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/delete.php?id='.$parentseve->id.'">'.get_string('delete').'</a>';
     $table->add_data($row);     

@@ -18,6 +18,7 @@ $string['confirmcancel'] = 'Are you sure you want to cancel this appointment? Th
 $string['confirmdelete'] = 'Are you sure you want to delete this Parents\' Evening? Clicking \"Yes\" will also delete the appointments for that Parents\' Evening, and this cannot be undone!';
 $string['date'] = 'Date';
 $string['emptyschedule'] = 'There are currently no appointments booked';
+$string['manageteachers'] = 'Manage Teachers';
 $string['fail'] = '$a appointments have failed to been made';
 $string['manageparentseve'] = 'Manage Parents\' Evenings';
 $string['mustcorrect'] = 'You must correct this before you can book appointments';
