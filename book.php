@@ -62,9 +62,9 @@ if(empty($parentname)) {
         </script>
         <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/book.php" id="parentseve_form" onSubmit="return parentseve_validate(this)" >
             <input name="id" type="hidden" value="'.$id.'">
-            <div id="_names">'
-                .get_string('parentname','block_parentseve').'<input type="text" name="parentname">'
-                .get_string('studentname','block_parentseve').'<input type="text" name="studentname">
+            <div id="_names">
+                <label for="parentname">'.get_string('parentname','block_parentseve').'</label><input type="text" name="parentname">
+                <label for="studentname">'.get_string('studentname','block_parentseve').'</label><input type="text" name="studentname">
             </div>
         <div id="parentseve_buttons"><button type="button" onClick="newAppointment()">'.get_string('newapp','block_parentseve').'</button>
         <input type="submit" value="'.get_string('confirmapps','block_parentseve').'"></div><div id="parentseve_appointments"><!--AJAX will put the schedules in here--></div><div style="clear:both;"></div></form>';

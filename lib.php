@@ -94,11 +94,18 @@ function parentseve_print_schedule($teacher,$parentseve) {
  */
 
 function parentseve_get_teachers($parentseve) {
-    if(!empty($parentseve->teachers)) {
-        return get_records_select('user', 'id IN('.$parentseve->teachers.')', 'lastname, firstname', 'id, lastname, firstname');
+    global $CFG;
+
+    $select = 'SELECT u.* ';
+    $from = 'FROM '.$CFG->prefix.'parentseve_teacher AS t
+            JOIN '.$CFG->prefix.'user AS u ON t.userid = u.id ';
+    $where = 'WHERE t.parentseveid = '.$parentseve->id.' ';
+    $order = 'ORDER BY firstname, lastname ASC';
+    if($teachers = get_records_sql($select.$from.$where.$order)) {
+        return $teachers;
     } else {
-    	return array();
-    }
+        return array();
+    }    
     
 }
 
