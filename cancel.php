@@ -14,6 +14,7 @@
  */
 
 require_once('../../config.php');
+require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 $context = get_context_instance(CONTEXT_SYSTEM);
