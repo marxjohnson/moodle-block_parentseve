@@ -118,14 +118,7 @@ function parentseve_get_teachers($parentseve) {
  */
 
 function parentseve_isteacher($userid, $parentseve) {
-    $parentseve = get_record('parentseve', 'id', $parentseve->id);
-    $teachers = explode(',',$parentseve->teachers);
-
-    if (array_search($userid,$teachers) === false) {
-        return false;
-    } else {
-        return true;
-    }
+    return get_record('parentseve_teacher', 'parentseveid', $parentseve->id, 'userid', $userid);
 }
 
 /**
