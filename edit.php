@@ -77,54 +77,22 @@
     $selectedusers = array();
     if ($parentseve) {
         $formdata = $parentseve;
-        $formdata->appointmentlength = $parentseve->appointmentlength/60;
-        if (!empty($add) && !empty($remove)) {
-            $selectedusers = parentseve_get_teachers($parentseve);	
-        }                
-        if (!empty($teachers)) {
-            $selectedusers = array_merge($selectedusers, get_records_select('user', 'id IN ('.implode(',', $teachers).')', 'firstname ASC', 'id, firstname, lastname'));	
-        }
+        $formdata->appointmentlength = $parentseve->appointmentlength/60;        
     } else {
         $formdata = new stdClass;
     }
 
-    if (!empty($add)) {
-    	if (!empty($addusers)) {
-            $addteachers = get_records_select('user', 'id IN ('.implode(',', $addusers).')', 'firstname ASC', 'id, firstname, lastname');   
-        } else {
-            $addteachers = array();
-        }
-        $selectedusers = array_merge($selectedusers, $addteachers);
-    }
-    if(!empty($selectedusers)) {
-        $rekey = $selectedusers;
-        $selectedusers = array();
-        foreach ($rekey as $user) {
-            $selectedusers[$user->id] = $user;
-        }
-        unset($rekey);
-    }   
-     
-    if (!empty($remove)){
-    	if (!empty($removeusers)) {            
-            $removeteachers = get_records_select('user', 'id IN ('.implode(',', $removeusers).')', 'firstname ASC', 'id, firstname, lastname');   
-        } else {
-            $removeteachers = array();
-        }
-        $selectedusers = array_diff_key($selectedusers, $removeteachers);
-    }    
-    
-    $formdata->teachers = implode(',', array_keys($selectedusers));        
-    $mform->set_data($formdata);
-    
-    $unselectedusers = array_diff_key($unselectedusers, $selectedusers);
+    $mform->set_data($formdata);    
 
     if ($newdata = $mform->get_data()) {
         $newdata->appointmentlength = $newdata->appointmentlength*60;
         unset($newdata->MAX_FILE_SIZE);
-        if (!empty($parentseve)) {
-            $newdata->id = $parentseve->id;
-            update_record('parentseve',$newdata);
+        if ($parentseve) {
+            $parentseve->timestart = $newdata->timestart;
+            $parentseve->timeend = $newdata->timeend;
+            $parentseve->appointmentlength = $newdata->appointmentlength;
+            $parentseve->info = $newdata->info;
+            update_record('parentseve',$parentseve);
             redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
         } else {
             insert_record('parentseve',$newdata);

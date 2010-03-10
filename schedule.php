@@ -40,13 +40,12 @@
         add_to_log(0, 'parentseve', 'View schedule', $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id, $id);
 
         echo '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$id.'">'.get_string('bookapps','block_parentseve').'</a>';
-
-    //Display tabs
+    
     if(has_capability('block/parentseve:viewall', $context)) {
         //show all teachers' schedules
 
         $teachers = parentseve_get_teachers($parentseve);
-        foreach($teachers as $teacher){
+        foreach($teachers as $teacher) {
             parentseve_print_schedule($teacher,$parentseve);
         }
 
