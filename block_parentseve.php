@@ -34,7 +34,7 @@ class block_parentseve extends block_list {
         }
         global $CFG, $USER;
         
-        $context = get_context_instance(CONTEXT_SYSTEM);
+        $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
         $this->content = new stdClass;
         $this->content->items = array();
         $this->content->icons = array();

@@ -19,7 +19,7 @@
         print_error('noparentseve', 'block_parentseve');
     }
 
-    $context = get_context_instance(CONTEXT_SYSTEM);
+    $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
     if(!has_capability('block/parentseve:manage', $context) && $parentseve->timeend < time()) {
         print_error('oldparentseve', 'block_parentseve');
     }

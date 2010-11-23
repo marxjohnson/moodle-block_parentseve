@@ -13,7 +13,7 @@
  */
 
 require_once('../../config.php');
-$context = get_context_instance(CONTEXT_SYSTEM);
+$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
 require_capability('block/parentseve:manage', $context);
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);

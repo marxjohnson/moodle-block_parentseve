@@ -37,7 +37,7 @@
     require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
     require_login();
 
-    $context = get_context_instance(CONTEXT_SYSTEM);
+    $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
     require_capability('block/parentseve:manage', $context);
 
     $parentseve = get_record('parentseve', 'id', $id);

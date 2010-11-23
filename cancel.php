@@ -17,7 +17,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
-$context = get_context_instance(CONTEXT_SYSTEM);
+$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
 require_capability('block/parentseve:cancel', $context);
 $app_sql = 'SELECT a.id, a.parentseveid, a.apptime, t.firstname, t.lastname
             FROM '.$CFG->prefix.'parentseve_app AS a

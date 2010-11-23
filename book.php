@@ -15,7 +15,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 $id = required_param('id', PARAM_INT);   
 $config = get_config('block/parentseve');
-$context = get_context_instance(CONTEXT_SYSTEM);
+$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
 
 if(!$config->allowanon) {
 	require_login();

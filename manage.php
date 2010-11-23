@@ -13,7 +13,7 @@
 require_once '../../config.php';
 require $CFG->libdir.'/tablelib.php';
 
-$systemcontext = get_context_instance(CONTEXT_SYSTEM);
+$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
 require_capability('block/parentseve:manage', $systemcontext);
 
 $parentseves = get_records('parentseve', '', '', 'timestart DESC');

@@ -2,7 +2,7 @@
 require_once('../../config.php');
 require_once ($CFG->libdir.'/formslib.php');
 require_login();
-$context = get_context_instance(CONTEXT_SYSTEM);
+$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
 require_capability('block/parentseve:manage', $context);
 
 $id = optional_param('id', 0, PARAM_INT);
