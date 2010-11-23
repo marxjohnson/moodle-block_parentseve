@@ -20,7 +20,7 @@
 * @param object $parentseve The record for the parents' evening
 * @return boolean was a schedule printed sucessfully? Will return false if teacher has no appointments booked
 */
-function parentseve_print_schedule($teacher,$parentseve) {
+function parentseve_print_schedule($teacher,$parentseve,$id) {
     global $CFG;
     $systemcontext = get_context_instance(CONTEXT_SYSTEM);
 
@@ -71,7 +71,7 @@ function parentseve_print_schedule($teacher,$parentseve) {
             $row[1] = $appcron[$time]['parentname'];
             $row[2] = $appcron[$time]['studentname'];            
             if (has_capability('block/parentseve:cancel', $systemcontext)) {                
-                $row[3] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/cancel.php?id='.$appcron[$time]['id'].'">'.get_string('cancel').'</a>';
+                $row[3] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/cancel.php?id='.$id.'&amp;appointment='.$appcron[$time]['id'].'">'.get_string('cancel').'</a>';
             }  
         }        
         

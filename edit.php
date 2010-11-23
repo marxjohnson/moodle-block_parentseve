@@ -13,7 +13,8 @@
  */
     require_once('../../config.php');
 
-    $id = optional_param('id', 0, PARAM_INT);
+    $id = required_param('id', PARAM_INT);
+    $parentseve = optional_param('parentseve', 0, PARAM_INT);
     /**
      * @var string $searchtext The text to filter the list of potential teachers by
      */
@@ -37,14 +38,14 @@
     require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
     require_login();
 
-    $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
+    $context = get_context_instance(CONTEXT_BLOCK, $id);
     require_capability('block/parentseve:manage', $context);
 
-    $parentseve = get_record('parentseve', 'id', $id);
+    $parentseve = get_record('parentseve', 'id', $parentseve);
     
     /// Print the page header
     $navlinks = array();
-    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity'); 
+    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id, 'type' => 'activity');
 
     if ($parentseve) {
         $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id, 'type' => 'activityinstance');
@@ -93,10 +94,10 @@
             $parentseve->appointmentlength = $newdata->appointmentlength;
             $parentseve->info = $newdata->info;
             update_record('parentseve',$parentseve);
-            redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
+            redirect($CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id);
         } else {
             insert_record('parentseve',$newdata);
-            redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
+            redirect($CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id);
         }
     }
         

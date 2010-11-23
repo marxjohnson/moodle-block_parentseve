@@ -2,20 +2,22 @@
 require_once('../../config.php');
 require_once ($CFG->libdir.'/formslib.php');
 require_login();
-$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
-require_capability('block/parentseve:manage', $context);
 
-$id = optional_param('id', 0, PARAM_INT);
+$id = required_param('id', PARAM_INT);
+$parentseve = required_param('parentseve', PARAM_INT);
 $showall = optional_param('showall', false, PARAM_BOOL);
 $searchtext = optional_param('searchtext', '', PARAM_TEXT);
 $add = optional_param('add', '', PARAM_TEXT);
 $remove = optional_param('remove', '', PARAM_TEXT);
 
+$context = get_context_instance(CONTEXT_BLOCK, $id);
+require_capability('block/parentseve:manage', $context);
+
 if($showall) {
    $searchtext = '';
 }
 
-if (!$parentseve = get_record('parentseve', 'id', $id)) {
+if (!$parentseve = get_record('parentseve', 'id', $parentseve)) {
     print_error('noparentseve', 'block_parentseve');
 }
 
@@ -42,7 +44,7 @@ if(!empty($remove)) {
 
 
 $navlinks = array();
-$navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity');
+$navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id, 'type' => 'activity');
 
 $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');
 
@@ -68,11 +70,7 @@ $users = array_diff_key($users, $teachers);
 
 print_header_simple(get_string('parentseveschedule','block_parentseve'), '', $navigation, "", "", true, '');
 
-echo '<form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/teachers.php';
-        if (!empty($id)) {
-            echo '?id='.$id;
-        }
-    echo '">
+echo '<form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/teachers.php?id='.$id.'&amp;parentseve='.$parentseve->id.'">
         <fieldset><legend>'.get_string('parentseveteachers', 'block_parentseve').'</legend></fieldset>
         <table style="margin-left:auto;margin-right:auto" border="0" cellpadding="5" cellspacing="0">
             <tr>

@@ -13,16 +13,17 @@
  */
 require_once('../../config.php');
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
-$id = required_param('id', PARAM_INT);   
+$id = optional_param('id', 0, PARAM_INT);
+$parentseve = required_param('parentseve', PARAM_INT);
 $config = get_config('block/parentseve');
-$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
+$context = get_context_instance(CONTEXT_BLOCK, $id);
 
 if(!$config->allowanon) {
 	require_login();
     require_capability('block/parentseve:book', $context);
 }
 
-if (!$parentseve = get_record('parentseve', 'id', $id)) {
+if (!$parentseve = get_record('parentseve', 'id', $parentseve)) {
     print_error('noparentseve', 'block_parentseve');
 }
 
@@ -37,12 +38,12 @@ $newappointmentteachers = optional_param('appointmentteacher', null, PARAM_TEXT)
 
 $navlinks = array();
 if(has_capability('block/parentseve:manage', $context)) {
-    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php', 'type' => 'activity');	
+    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id, 'type' => 'activity');
 } else {
     $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
 }
 if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
-    $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id, 'type' => 'activityinstance');	
+    $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&amp;parentseve='.$parentseve->id, 'type' => 'activityinstance');
 } else {
     $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');	
 }
@@ -62,6 +63,7 @@ if(empty($parentname)) {
         </script>
         <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/book.php" id="parentseve_form" onSubmit="return parentseve_validate(this)" >
             <input name="id" type="hidden" value="'.$id.'">
+            <input name="parentseve" type="hidden" value="'.$parentseve->id.'">
             <div id="_names">
                 <label for="parentname">'.get_string('parentname','block_parentseve').'</label><input type="text" name="parentname">
                 <label for="studentname">'.get_string('studentname','block_parentseve').'</label><input type="text" name="studentname">
@@ -69,7 +71,7 @@ if(empty($parentname)) {
         <div id="parentseve_buttons"><button type="button" onClick="newAppointment()">'.get_string('newapp','block_parentseve').'</button>
         <input type="submit" value="'.get_string('confirmapps','block_parentseve').'"></div><div id="parentseve_appointments"><!--AJAX will put the schedules in here--></div><div style="clear:both;"></div></form>';
 } else {
-    add_to_log(0, 'parentseve', 'Submit booking', $CFG->wwwroot.'/blocks/parentseve/book.php?id='.$id, $id);
+    add_to_log(0, 'parentseve', 'Submit booking', $CFG->wwwroot.'/blocks/parentseve/book.php?parentseve='.$parentseve->id, $id);
     $success = 0;
     $fail = 0;
     //must have submitted the booking form
@@ -94,7 +96,7 @@ if(empty($parentname)) {
     echo '<br>'.get_string('success','block_parentseve',$success);
     if ($fail>0) echo '<br>'.get_string('fail','block_parentseve',$fail);
     echo '<h4>'.get_string('printsave','block_parentseve').'</h4>';
-    echo '<p><a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$id.'">'.get_string('backtoappointments', 'block_parentseve').'</a></p>';
+    echo '<p><a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?&amp;parentseve='.$parentseve->id.'">'.get_string('backtoappointments', 'block_parentseve').'</a></p>';
 }
 print_footer();
 ?>

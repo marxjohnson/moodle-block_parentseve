@@ -41,17 +41,17 @@ class block_parentseve extends block_list {
         $this->content->footer = ' ';
 
         if (has_capability('block/parentseve:manage', $context)) {            
-        	$this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/manage.php">'.get_string('manageparentseve','block_parentseve').'</a>';
+        	$this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$this->instance->id.'">'.get_string('manageparentseve','block_parentseve').'</a>';
             $this->content->icons[] = '';
         }
         
         if (has_capability('block/parentseve:book', $context)) {
             $parentseves = get_records_select('parentseve', 'timestart > '.time());
             foreach($parentseves as $parentseve) {
-                $this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$parentseve->id.'">'.date('D jS M Y', $parentseve->timestart).'</a>';
+                $this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$this->instance->id.'&amp;parentseve='.$parentseve->id.'">'.date('D jS M Y', $parentseve->timestart).'</a>';
                 $this->content->icons[] = '<img src="'.$CFG->pixpath.'/i/item.gif" />';
                 if (parentseve_isteacher($USER->id, $parentseve) || has_capability('block/parentseve:viewall', $context)) {
-                	$this->content->items[] = '&nbsp;&nbsp;&nbsp;&ndash; <a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$parentseve->id.'">'.get_string('viewapps', 'block_parentseve').'</a>';
+                	$this->content->items[] = '&nbsp;&nbsp;&nbsp;&ndash; <a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$this->instance->id.'&amp;parentseve='.$parentseve->id.'">'.get_string('viewapps', 'block_parentseve').'</a>';
                     $this->content->icons[] = '';
                 }
                 
