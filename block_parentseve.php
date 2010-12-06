@@ -46,7 +46,7 @@ class block_parentseve extends block_list {
         }
         
         if (has_capability('block/parentseve:book', $context)) {
-            $parentseves = get_records_select('parentseve', 'timestart > '.time());
+            $parentseves = get_records_select('parentseve', 'timeend > '.time());
             foreach($parentseves as $parentseve) {
                 $this->content->items[] = '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$this->instance->id.'&amp;parentseve='.$parentseve->id.'">'.date('D jS M Y', $parentseve->timestart).'</a>';
                 $this->content->icons[] = '<img src="'.$CFG->pixpath.'/i/item.gif" />';
