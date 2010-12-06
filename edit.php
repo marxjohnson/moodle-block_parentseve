@@ -78,6 +78,8 @@
     $selectedusers = array();
     if ($parentseve) {
         $formdata = $parentseve;
+        $formdata->id = $id;
+        $formdata->parentseve = $parentseve->id;
         $formdata->appointmentlength = $parentseve->appointmentlength/60;        
     } else {
         $formdata = new stdClass;
