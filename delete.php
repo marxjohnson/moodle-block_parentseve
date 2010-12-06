@@ -13,16 +13,19 @@
  */
 
 require_once('../../config.php');
-$context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
-require_capability('block/parentseve:manage', $context);
 $id = required_param('id', PARAM_INT);
+$parentseve = required_param('parentseve', PARAM_INT);
+
+$context = get_context_instance(CONTEXT_BLOCK, $id);
+require_capability('block/parentseve:manage', $context);
+
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
-$parentseve = get_record('parentseve', 'id', $id);
+$parentseve = get_record('parentseve', 'id', $parentseve);
 if ($parentseve) {
     if ($confirm) {    
-        delete_records('parentseve_app', 'parentseveid', $id);
-        delete_records('parentseve', 'id', $id);
-        redirect($CFG->wwwroot.'/blocks/parentseve/manage.php');
+        delete_records('parentseve_app', 'parentseveid', $parentseve->id);
+        delete_records('parentseve', 'id', $parentseve->id);
+        redirect($CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id);
     } else {
         $navlinks = array();
         if(has_capability('block/parentseve:manage', $context)) {
@@ -46,6 +49,7 @@ if ($parentseve) {
         <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/delete.php">
         <input type="hidden" name="confirm" value="1" />
         <input type="hidden" name="id" value="'.$id.'" />
+        <input type="hidden" name="parentseve" value="'.$parentseve->id.'" />
         <input type="submit" value="'.get_string('yes').'" />
         </form>
         <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/manage.php">

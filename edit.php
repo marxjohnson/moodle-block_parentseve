@@ -77,10 +77,12 @@
 
     $selectedusers = array();
     if ($parentseve) {
-        $formdata = $parentseve;
         $formdata->id = $id;
         $formdata->parentseve = $parentseve->id;
-        $formdata->appointmentlength = $parentseve->appointmentlength/60;        
+        $formdata->timestart = $parentseve->timestart;
+        $formdata->timeend = $parentseve->timeend;
+        $formdata->appointmentlength = $parentseve->appointmentlength/60;
+        $formdata->info = $parentseve->info;
     } else {
         $formdata = new stdClass;
     }
@@ -91,6 +93,26 @@
         $newdata->appointmentlength = $newdata->appointmentlength*60;
         unset($newdata->MAX_FILE_SIZE);
         if ($parentseve) {
+
+            // if the evening has been moved to a different day, update any appointments that have already been booked
+            if ($parentseve->timestart != $newdata->timestart
+                && $parentseve->timeend != $newdata->timeend
+                && date('YMd', $parentseve->timestart) == date('YMd', $parentseve->timeend)
+                && date('YMd', $newdata->timestart) == date('YMd', $newdata->timeend)
+                && date('YMd', $parentseve->timestart) != date('YMd', $newdata->timestart)
+                && date('YMd', $parentseve->timeend) != date('YMd', $newdata->timeend)
+                ) {
+
+                if($appointments = get_records('parentseve_app', 'parentseveid', $parentseve->id)) {
+                    foreach($appointments as $appointment) {
+                        $time = $appointment->apptime - $parentseve->timestart;
+                        $newtime = $newdata->timestart+$time;
+                        set_field('parentseve_app', 'apptime', $newtime, 'id', $appointment->id);
+                    }
+                }
+
+            }
+           
             $parentseve->timestart = $newdata->timestart;
             $parentseve->timeend = $newdata->timeend;
             $parentseve->appointmentlength = $newdata->appointmentlength;
