@@ -13,12 +13,12 @@ function newAppointment(){
     newapp.className = 'parentseve_appointment';
     newapp.innerHTML = '<?php print_string('teacher','block_parentseve');?>:<select name="appointmentteacher['+i+']" onchange="parentseve_refreshSchedule('+i+')"><?php
         $teachers = parentseve_get_teachers($parentseve);
+        echo '<option value="">Select a Teacher...</option>';
         foreach ($teachers as $teacher) {
             echo'<option value="'.$teacher->id.'">'.addslashes($teacher->firstname.' '.$teacher->lastname).'</option>';
         }
         ?></select><div class="parentseve_schedule" id="parentseve_schedule'+i+'"></div><a href="#" onclick="delAppointment('+i+')">Cancel</a>';
     document.getElementById('parentseve_appointments').appendChild(newapp);
-    parentseve_refreshSchedule(i);
     i++;
 }
 
