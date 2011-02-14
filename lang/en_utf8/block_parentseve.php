@@ -1,5 +1,6 @@
 <?php
 $string['allowanon'] = 'Allow anonymous users';
+$string['allschedules'] = 'Show All Appointments';
 $string['allowanon_explain'] = 'If this setting is checked, anyone who knows the URL can book an appointment (so parents don\'t have to have an account). Otherwise, only users with parentseve:book can access the page.';
 $string['appbooked'] = 'Appointment with: $a[teacher] At: $a[apptime] booked';
 $string['appnotbooked'] = 'There was an error, appointment with: $a[teacher] At: $a[apptime] not booked';
@@ -20,6 +21,7 @@ $string['date'] = 'Date';
 $string['emptyschedule'] = 'There are currently no appointments booked';
 $string['manageteachers'] = 'Manage Teachers';
 $string['fail'] = '$a appointments have failed to been made';
+$string['justmyschedule'] = 'Just show my appointments';
 $string['manageparentseve'] = 'Manage Parents\' Evenings';
 $string['mustcorrect'] = 'You must correct this before you can book appointments';
 $string['newapp'] = 'Add a New Appointment';

@@ -15,6 +15,7 @@
 
     $id = required_param('id', PARAM_INT);
     $parentseve = required_param('parentseve', PARAM_INT);
+    $justmyschedule = optional_param('my', 0, PARAM_BOOL);
 
     if (!$parentseve = get_record('parentseve', 'id', $parentseve)) {
         print_error('noparentseve', 'block_parentseve');
@@ -42,21 +43,32 @@
 
         echo '<a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?id='.$id.'&amp;parentseve='.$parentseve->id.'">'.get_string('bookapps','block_parentseve').'</a>';
     
-    if(has_capability('block/parentseve:viewall', $context)) {
-        //show all teachers' schedules
-
-        $teachers = parentseve_get_teachers($parentseve);
-        foreach($teachers as $teacher) {
-            parentseve_print_schedule($teacher,$parentseve, $id);
+    $is_teacher = parentseve_isteacher($USER->id,$parentseve);
+    if(has_capability('block/parentseve:viewall', $context) || $is_teacher) {
+     
+        if ($justmyschedule) {
+            
+             // Show link to user's own schedule
+                echo '<p><a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&amp;parentseve='.$parentseve->id.'">';
+                    print_string('allschedules', 'block_parentseve');
+                echo '</a></p>';
+            
+            parentseve_print_schedule($USER,$parentseve, $id);
+        } else {
+            if ($is_teacher) {
+                // Show link to user's own schedule
+                echo '<p><a href="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&amp;parentseve='.$parentseve->id.'&amp;my=1">';
+                    print_string('justmyschedule', 'block_parentseve');
+                echo '</a></p>';
+            }
+        
+            //show all teachers' schedules
+            $teachers = parentseve_get_teachers($parentseve);
+            foreach($teachers as $teacher) {
+                parentseve_print_schedule($teacher,$parentseve, $id);
+            }
         }
 
-    } else if (parentseve_isteacher($USER->id,$parentseve)) {
-        //show current users schedule
-        
-        if(!parentseve_print_schedule($USER,$parentseve, $id)){
-            print_string('emptyschedule','block_parentseve',$USER->firstname.' '.$USER->lastname);
-        }
-        
     } else {
         print_error('nopermissions');
     }
