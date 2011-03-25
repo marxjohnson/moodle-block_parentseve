@@ -77,7 +77,6 @@
 
     $selectedusers = array();
     if ($parentseve) {
-        $formdata->id = $id;
         $formdata->parentseve = $parentseve->id;
         $formdata->timestart = $parentseve->timestart;
         $formdata->timeend = $parentseve->timeend;
@@ -87,6 +86,7 @@
         $formdata = new stdClass;
     }
 
+    $formdata->id = $id;
     $mform->set_data($formdata);    
 
     if ($newdata = $mform->get_data()) {
