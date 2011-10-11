@@ -1,11 +1,11 @@
 <?php
 /**
  * Display the appointment booking form
- * 
- * Displays a page containing fields for the student's and parent's name, 
+ *
+ * Displays a page containing fields for the student's and parent's name,
  * along with a button to add a new appointment. The button uses an AJAX call to {@see book_ss.php}
  * to display a list of teachers and times for each requested appointment.
- * 
+ *
  * @package block_parentseve
  * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
  * @copyright Copyright &copy; 2009 Taunton's College, Southampton, UK
@@ -19,11 +19,13 @@ $config = get_config('block/parentseve');
 $context = get_context_instance(CONTEXT_BLOCK, $id);
 
 if(!$config->allowanon) {
-	require_login();
+    require_login($SITE);
     require_capability('block/parentseve:book', $context);
+} else {
+    $PAGE->set_context($context);
 }
 
-if (!$parentseve = get_record('parentseve', 'id', $parentseve)) {
+if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseve))) {
     print_error('noparentseve', 'block_parentseve');
 }
 
@@ -36,67 +38,86 @@ $studentname = optional_param('studentname', null, PARAM_TEXT);
 $newappointments = optional_param('appointment', null, PARAM_TEXT);
 $newappointmentteachers = optional_param('appointmentteacher', null, PARAM_TEXT);
 
-$navlinks = array();
+$PAGE->set_url('/blocks/parentseve/book.php', array('id' => $id, 'parentseve' => $parentseve->id));
 if(has_capability('block/parentseve:manage', $context)) {
-    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id, 'type' => 'activity');
+    $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
+    $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
 } else {
-    $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+    $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'));
 }
 if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
-    $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&amp;parentseve='.$parentseve->id, 'type' => 'activityinstance');
+    $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
+    $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart), $url);
 } else {
-    $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');	
+    $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart));
 }
-$navlinks[] = array('name' => get_string('book', 'block_parentseve'), 'link' => '', 'type' => 'activityinstance');
-$navigation = build_navigation($navlinks);
+$PAGE->navbar->add(get_string('book', 'block_parentseve'));
 
-print_header_simple(get_string('bookapps','block_parentseve'), '', $navigation, "", "", true, '');
+$output = $PAGE->get_renderer('block_parentseve');
 
+$jsmodule = array(
+    'name'     => 'block_parentseve',
+    'fullpath' => '/blocks/parentseve/module.js',
+    'requires' => array('base', 'io', 'node', 'json', 'selector-css3'),
+    'strings' => array(
+        array('teacher', 'block_parentseve'),
+        array('noappointments', 'block_parentseve'),
+        array('noparentname', 'block_parentseve'),
+        array('nostudentname', 'block_parentseve'),
+        array('noappointmentwith', 'block_parentseve'),
+        array('mustcorrect', 'block_parentseve'),
+        array('cancel', 'moodle'),
+        array('busy', 'block_parentseve'),
+        array('selectteacher', 'block_parentseve')
+    )
+);
+$teachers = parentseve_get_teachers($parentseve);
+$PAGE->requires->js_init_call('M.block_parentseve.init', array($teachers, $parentseve->id), false, $jsmodule);
 
-if(empty($parentname)) {
+$content = $OUTPUT->heading(get_string('bookapps','block_parentseve'), 1);
 
-    add_to_log(0, 'parentseve', 'View booking form', $CFG->wwwroot.'/blocks/parentseve/book.php?id='.$id, $id);
-    echo get_string('parentseveon', 'block_parentseve', array('date'=>date('l jS F Y',$parentseve->timestart))).'<p class="_info">'.$parentseve->info.'</p>
-        <noscript>This page requires javascript to be enabled</noscript><!--TODO:lang-->
-        <script type="text/javascript" src="'.$CFG->wwwroot.'/blocks/parentseve/js/book.js.php?id='.$parentseve->id.'">
+if (empty($parentname)) {
 
-        </script>
-        <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/book.php" id="parentseve_form" onSubmit="return parentseve_validate(this)" >
-            <input name="id" type="hidden" value="'.$id.'">
-            <input name="parentseve" type="hidden" value="'.$parentseve->id.'">
-            <div id="_names">
-                <label for="parentname">'.get_string('parentname','block_parentseve').'</label><input type="text" name="parentname">
-                <label for="studentname">'.get_string('studentname','block_parentseve').'</label><input type="text" name="studentname">
-            </div>
-        <div id="parentseve_buttons"><button type="button" onClick="newAppointment()">'.get_string('newapp','block_parentseve').'</button>
-        <input type="submit" value="'.get_string('confirmapps','block_parentseve').'"></div><div id="parentseve_appointments"><!--AJAX will put the schedules in here--></div><div style="clear:both;"></div></form>';
+    add_to_log(0, 'parentseve', 'View booking form', $PAGE->url->out(), $id);
+    $content .= $output->booking_info($parentseve->timestart, $parentseve->info);
+    $content .= $output->booking_form($PAGE->url);
+
 } else {
-    add_to_log(0, 'parentseve', 'Submit booking', $CFG->wwwroot.'/blocks/parentseve/book.php?parentseve='.$parentseve->id, $id);
-    $success = 0;
-    $fail = 0;
+    add_to_log(0, 'parentseve', 'Submit booking', $PAGE->url->out(false), $id);
+    $successes = array();
+    $failures = array();
+
     //must have submitted the booking form
     foreach ($newappointments as $key => $newappointment) {
-        if ($teacher = get_record('user','id',$newappointmentteachers[$key])) {
+        if ($teacher = $DB->get_record('user', array('id' => $newappointmentteachers[$key]))) {
             $appointment = new object();
             $appointment->parentseveid = $parentseve->id;
             $appointment->teacherid = $newappointmentteachers[$key];
             $appointment->apptime = $newappointment;
             $appointment->parentname = $parentname;
             $appointment->studentname = $studentname;
-            if(!get_record('parentseve_app', 'teacherid', $appointment->teacherid, 'apptime', $appointment->apptime)) {
-                insert_record('parentseve_app', $appointment);
-                echo get_string('appbooked','block_parentseve',array('teacher'=>$teacher->firstname.' '.$teacher->lastname,'apptime'=>date('G:i',$appointment->apptime))).'<br>';
-                $success++;
+            if(!$DB->record_exists('parentseve_app', array('teacherid' => $appointment->teacherid, 'apptime' => $appointment->apptime))) {
+                if ($DB->insert_record('parentseve_app', $appointment)) {
+                    $appointment->teacher = fullname($teacher);
+                    $successes[] = $appointment;
+                } else {
+                    $appointment->teacher = fullname($teacher);
+                    $failures[] = $appointment;
+                }
             } else {
-                echo get_string('appnotbooked','block_parentseve',array('teacher'=>$teacher->firstname.' '.$teacher->lastname,'apptime'=>date('G:i',$appointment->apptime))).'<br>';
-                $fail++;
+                $appointment->teacher = fullname($teacher);
+                $failures[] = $appointment;
             }
         }
     }
-    echo '<br>'.get_string('success','block_parentseve',$success);
-    if ($fail>0) echo '<br>'.get_string('fail','block_parentseve',$fail);
-    echo '<h4>'.get_string('printsave','block_parentseve').'</h4>';
-    echo '<p><a href="'.$CFG->wwwroot.'/blocks/parentseve/book.php?&amp;parentseve='.$parentseve->id.'">'.get_string('backtoappointments', 'block_parentseve').'</a></p>';
+
+    $content .= $output->booking_response($successes, $failures, $PAGE->url);
+
 }
-print_footer();
+
+echo $OUTPUT->header();
+
+echo $content;
+
+echo $OUTPUT->footer();
 ?>

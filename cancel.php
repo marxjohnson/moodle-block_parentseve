@@ -1,11 +1,11 @@
 <?php
 /**
  * Cancels an appointment
- * 
+ *
  * Allows users with parentseve:cancel to cancel an appointment that's been made.
  * Displays a confirmation form which submits back to this page. If deletion is confirmed,
  * the record for the appointment is deleted.
- * 
+ *
  * @package block_parentseve
  * @author Mark Johnson <johnsom@tauntons.ac.uk>
  * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
@@ -19,52 +19,70 @@ $id = required_param('id', PARAM_INT);
 $appointment = required_param('appointment', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 $context = get_context_instance(CONTEXT_BLOCK, $id);
+
+require_login($SITE);
 require_capability('block/parentseve:cancel', $context);
+
 $app_sql = 'SELECT a.id, a.parentseveid, a.apptime, t.firstname, t.lastname
-            FROM '.$CFG->prefix.'parentseve_app AS a
-                JOIN '.$CFG->prefix.'user AS t ON a.teacherid = t.id
-            WHERE a.id = '.$appointment;
-$app = get_record_sql($app_sql);
-$parentseve = get_record('parentseve', 'id', $app->parentseveid);
+            FROM {parentseve_app} AS a
+                JOIN {user} AS t ON a.teacherid = t.id
+            WHERE a.id = ?';
+
+$app = $DB->get_record_sql($app_sql, array($appointment));
+$parentseve = $DB->get_record('parentseve', array('id' => $app->parentseveid));
+
+$PAGE->set_url('/blocks/parentseve/book.php', array('id' => $id, 'parentseve' => $parentseve->id));
+
+$content = '';
 if ($app) {
-    if ($confirm) {    
-        delete_records('parentseve_app', 'id', $appointment);
-        redirect($CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&parentseve='.$parentseve->id);
+    if ($confirm) {
+        $DB->delete_records('parentseve_app', array('id' => $appointment));
+        $redirecturl = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
+        redirect($redirecturl);
     } else {
-        $navlinks = array();
         if(has_capability('block/parentseve:manage', $context)) {
-            $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'link' => $CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id, 'type' => 'activity');
+            $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
+            $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
         } else {
-            $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');
+            $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'));
         }
         if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
-            $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => $CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&parentseve='.$parentseve->id, 'type' => 'activityinstance');
+            $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
+            $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart), $url);
         } else {
-            $navlinks[] = array('name' => date('l jS M Y', $parentseve->timestart), 'link' => '', 'type' => 'activityinstance');    
+            $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart));
         }
-        $navlinks[] = array('name' => get_string('cancel'), 'link' => '', 'type' => 'activityinstance');
-        $navigation = build_navigation($navlinks);
-        
-        print_header_simple(get_string('cancel'), '', $navigation, "", "", true, '');
+        $PAGE->navbar->add(get_string('cancel'));
+
         $a->teacher = fullname($app);
         $a->time = date('H:i', $app->apptime);
         $a->date = date('d/M/Y', $app->apptime);
-        echo '<p>'.get_string('appointmentcancel', 'block_parentseve', $a).'</p>
-        <p>'.get_string('confirmcancel', 'block_parentseve').'</p>
-        <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/cancel.php">
-        <input type="hidden" name="confirm" value="1" />
-        <input type="hidden" name="id" value="'.$id.'" />
-        <input type="hidden" name="appointment" value="'.$appointment.'" />
-        <input type="submit" value="'.get_string('yes').'" />
-        </form>
-        <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/schedule.php?id='.$id.'&parentseve='.$parentseve->id.'">
-        <input type="submit" value="'.get_string('no').'" />
-        </form>'
-        ;
+
+        $content .= $OUTPUT->heading(get_string('appointmentcancel', 'block_parentseve', $a), 3);
+        $confirmparams = array(
+            'confirm' => true,
+            'id' => $id,
+            'appointment' => $appointment
+        );
+        $confirmurl = new moodle_url('/blocks/parentseve/cancel.php', $confirmparams);
+        $confirmbutton = new single_button($confirmurl, get_string('yes'));
+
+        $cancelparams = array(
+            'id' => $id,
+            'parentseve' => $parentseve->id
+        );
+        $cancelurl = new moodle_url('/blocks/parentseve/schedule.php', $cancelparams);
+        $cancelbutton = new single_button($cancelurl, get_string('no'), 'get');
+
+        $content .= $OUTPUT->confirm(get_string('confirmcancel', 'block_parentseve'), $confirmbutton, $cancelbutton);
     }
 } else {
     print_error('noappointment', 'block_parentseve');
 }
 
-print_footer();
+echo $OUTPUT->header();
+
+echo $content;
+
+echo $OUTPUT->footer();
 ?>

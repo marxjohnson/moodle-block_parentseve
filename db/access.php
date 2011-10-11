@@ -1,12 +1,12 @@
 <?php
-$block_parentseve_capabilities = array(
+$capabilities = array(
 
     'block/parentseve:manage' => array(
         // Manage edit, create and delete parents evenings
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'admin' => CAP_ALLOW
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -14,8 +14,8 @@ $block_parentseve_capabilities = array(
         // Create a booking (if not set to allow anon bookings)
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'admin' => CAP_ALLOW,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'student' => CAP_ALLOW
         )
@@ -25,8 +25,8 @@ $block_parentseve_capabilities = array(
         // Cancel bookings
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'admin' => CAP_ALLOW,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW
         )
     ),    
@@ -35,8 +35,8 @@ $block_parentseve_capabilities = array(
         // View all bookings
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'admin' => CAP_ALLOW,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW
         )
     )
