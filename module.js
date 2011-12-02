@@ -10,12 +10,15 @@ M.block_parentseve = M.block_parentseve || {
 
     parentseveid: null,
 
-    init: function(Y, teachers, parentseveid) {
+    altmethod: '',
+
+    init: function(Y, teachers, parentseveid, altmethod) {
         this.Y = Y;
         this.appointment_count = 0;
         this.appointments_deleted = new Array();
         this.teachers = teachers;
         this.parentseveid = parentseveid;
+        this.altmethod = altmethod;
         Y.one('#newapp_button').on('click', function(e) {
             e.preventDefault();
             M.block_parentseve.add_appointment();
@@ -83,6 +86,7 @@ M.block_parentseve = M.block_parentseve || {
         Y.io(M.cfg.wwwroot+'/blocks/parentseve/schedule_service.php', {
             method: 'get',
             data: 'parentseveid='+this.parentseveid+'&teacher='+teacherid,
+            context: this,
             on: {
                 success: function(id, o) {
                     response = Y.JSON.parse(o.responseText);
@@ -103,6 +107,9 @@ M.block_parentseve = M.block_parentseve || {
                         table.appendChild(row);
                     });
                     Y.one('#parentseve_schedule_'+appointmentid).setContent(table);
+                },
+                failure: function(id, o) {
+                    alert(M.util.get_string('formfailed', 'block_parentseve')+' '+this.altmethod);
                 }
             }
         });

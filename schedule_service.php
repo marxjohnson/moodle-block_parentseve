@@ -1,5 +1,6 @@
 <?php
 
+define(AJAX_SCRIPT, true);
 require_once('../../config.php');
 require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 
@@ -14,12 +15,14 @@ if(!$config->allowanon) {
 $parentseveid = required_param('parentseveid', PARAM_INT); // Parents evening ID
 $teacherid = required_param('teacher', PARAM_INT);
 
-if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseveid))) {
-    error('Parents evening ID was incorrect');
-}
+//if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseveid))) {
+    header('HTTP/1.1 404 Not Found');
+    die(get_string('parentsevenotfound', 'block_parentseve'));
+//}
 
 if ($parentseve->appointmentlength == 0) {
-    print_error('appointmentlengthzero','termreview');
+    header('HTTP/1.1 500 Internal Server Error');
+    die(get_string('appointmentlengthzero', 'block_parentseve'));
 }
 
 //In order to avoid a loop of DB calls, fetch all the relevant appointments then put them into an array which php can manipulate a lot quicker

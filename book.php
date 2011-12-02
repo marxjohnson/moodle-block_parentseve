@@ -68,11 +68,15 @@ $jsmodule = array(
         array('mustcorrect', 'block_parentseve'),
         array('cancel', 'moodle'),
         array('busy', 'block_parentseve'),
-        array('selectteacher', 'block_parentseve')
+        array('selectteacher', 'block_parentseve'),
+        array('formfailed', 'block_parentseve')
     )
 );
 $teachers = parentseve_get_teachers($parentseve);
-$PAGE->requires->js_init_call('M.block_parentseve.init', array($teachers, $parentseve->id), false, $jsmodule);
+$PAGE->requires->js_init_call('M.block_parentseve.init',
+                              array($teachers, $parentseve->id, $config->altmethod),
+                              false,
+                              $jsmodule);
 
 $content = $OUTPUT->heading(get_string('bookapps','block_parentseve'), 1);
 
