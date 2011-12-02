@@ -15,10 +15,10 @@ if(!$config->allowanon) {
 $parentseveid = required_param('parentseveid', PARAM_INT); // Parents evening ID
 $teacherid = required_param('teacher', PARAM_INT);
 
-//if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseveid))) {
+if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseveid))) {
     header('HTTP/1.1 404 Not Found');
     die(get_string('parentsevenotfound', 'block_parentseve'));
-//}
+}
 
 if ($parentseve->appointmentlength == 0) {
     header('HTTP/1.1 500 Internal Server Error');
