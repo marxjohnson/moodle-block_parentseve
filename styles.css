@@ -51,3 +51,13 @@ p.parentseve_info{
     overflow:auto;
     height:20em
 }
+
+.iewarning {
+    display:none;
+}
+
+.ie7 .iewarning,
+.ie6 .iewarning {
+    display:block;
+    border: 2px solid red;
+}

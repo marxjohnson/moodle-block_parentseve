@@ -80,6 +80,8 @@ $PAGE->requires->js_init_call('M.block_parentseve.init',
 
 $content = $OUTPUT->heading(get_string('bookapps','block_parentseve'), 1);
 
+$content .= $output->ie_warning();
+
 if (empty($parentname)) {
 
     add_to_log(0, 'parentseve', 'View booking form', $PAGE->url->out(), $id);

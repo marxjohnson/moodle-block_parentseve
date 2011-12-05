@@ -27,6 +27,9 @@ $string['emptyschedule'] = 'There are currently no appointments booked';
 $string['manageteachers'] = 'Manage Teachers';
 $string['fail'] = '{$a} appointments have failed to be made';
 $string['formfailed'] = 'Unfortunately, the booking form is experiencing problems at the moment.';
+$string['iewarning'] = 'You appear to be using an old version of Internet Explorer, or be running a newer version in "Compatibility View".
+    This page may not work correctly with old versions of Internet Explorer. Please upgrade to the latest version, or switch to a modern
+    browser such as <a href="http://getfirefox.com">Firefox</a>.';
 $string['justmyschedule'] = 'Just show my appointments';
 $string['manageparentseve'] = 'Manage Parents\' Evenings';
 $string['mustcorrect'] = 'You must correct this before you can book appointments';

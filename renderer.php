@@ -139,4 +139,10 @@ class block_parentseve_renderer extends plugin_renderer_base {
         return $output;
 
     }
+
+    function ie_warning() {
+        $strwarning = get_string('iewarning', 'block_parentseve');
+
+        return $this->output->box($strwarning, 'generalbox iewarning');
+    }
 }
