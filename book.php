@@ -80,7 +80,7 @@ $PAGE->requires->js_init_call('M.block_parentseve.init',
 
 $content = $OUTPUT->heading(get_string('bookapps','block_parentseve'), 1);
 
-$content .= $output->ie_warning();
+$content .= $output->ie_warning($config->altmethod);
 
 if (empty($parentname)) {
 
