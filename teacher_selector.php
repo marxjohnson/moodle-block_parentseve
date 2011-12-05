@@ -53,7 +53,10 @@ class parentseve_teacher_selector extends user_selector_base {
             $params[] = '%'.$search.'%';
             $params[] = '%'.$search.'%';
         }
-        $where .= 'AND deleted = ?';
+        if (!empty($where)) {
+            $where .= ' AND ';
+        }
+        $where .= 'deleted = ?';
         $params[] = 0;
         return array(get_string('users') => $DB->get_records_select('user', $where, $params));
     }
