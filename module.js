@@ -55,7 +55,9 @@ M.block_parentseve = M.block_parentseve || {
             select.appendChild(option);
         });
 
+        var dummy = Y.Node.create('<div class="parentseve_schedule_form" />')
         var schedule = Y.Node.create('<div class="parentseve_schedule" id="parentseve_schedule_'+this.appointment_count+'" />');
+        schedule.appendChild(dummy);
         var cancel = Y.Node.create('<button id="cancel_'+this.appointment_count+'">'+M.util.get_string('cancel', 'moodle')+'</button>');
         cancel.on('click', function(e) {
             e.preventDefault();
@@ -92,21 +94,22 @@ M.block_parentseve = M.block_parentseve || {
                     response = Y.JSON.parse(o.responseText);
                     table = Y.Node.create('<table class="parentseve_schedule_form">');
                     Y.Array.each(response.slots, function(timeslot) {
-                        row = document.createElement('tr');
-                        cell = document.createElement('td');
-                        cell.innerHTML = timeslot.displaytime
+                        row = Y.Node.create('<tr />');
+                        cell = Y.Node.create('<td>'+timeslot.displaytime+'</td>');
                         row.appendChild(cell);
 
-                        cell = document.createElement('td');
                         if (timeslot.busy) {
-                            cell.innerHTML = M.util.get_string('busy','block_parentseve');
+                            strbusy = M.util.get_string('busy','block_parentseve');
+                            cell = Y.Node.create('<td>'+strbusy+'</td>');
                         } else {
-                            cell.innerHTML = '<input type="radio" class="parentseve_app_'+appointmentid+'" name="appointment['+appointmentid+']" value="'+timeslot.time+'" class="parentseve_app">';
+                            cell = Y.Node.create('<td />');
+                            radio = Y.Node.create('<input type="radio" class="parentseve_app_'+appointmentid+'" name="appointment['+appointmentid+']" value="'+timeslot.time+'" class="parentseve_app">');
+                            cell.appendChild(radio);
                         }
                         row.appendChild(cell);
                         table.appendChild(row);
                     });
-                    Y.one('#parentseve_schedule_'+appointmentid).setContent(table);
+                    Y.one('#parentseve_schedule_'+appointmentid+' .parentseve_schedule_form').replace(table);
                 },
                 failure: function(id, o) {
                     alert(M.util.get_string('formfailed', 'block_parentseve')+' '+this.altmethod);
