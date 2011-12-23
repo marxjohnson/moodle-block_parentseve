@@ -1,7 +1,42 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
+/**
+ * Defines the renderer for the Parents' Eve block
+ *
+ * Defines {@see block_parentseve_renderer}
+ *
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ */
+
+/**
+ * Renderer for Parents' Evening block
+ */
 class block_parentseve_renderer extends plugin_renderer_base {
 
+    /**
+     * Displays user selectors for adding teachers to the current parents' evening
+     *
+     * @param $potential parentseve_teacher_selector
+     * @param $selected parentseve_teacher_selector
+     * @return string HTML form containing the selectors
+     */
     function teacher_selector ($potential, $selected) {
 
         $output = '';
@@ -21,6 +56,15 @@ class block_parentseve_renderer extends plugin_renderer_base {
         return $output;
     }
 
+    /**
+     * A table of booked appointments, optionally with links to cancel
+     *
+     * @param $id int instance ID, for cancel links
+     * @param $parentseve object The parents's evening record
+     * @param $appointments array The appointments to be displayed
+     * @param $cancel bool Display cancel links?
+     * @return string HTML table containing the booked appointments
+     */
     function schedule_table($id, $parentseve, $appointments = array(), $cancel = false) {
 
         $output = '';
@@ -67,21 +111,49 @@ class block_parentseve_renderer extends plugin_renderer_base {
         return $output;
     }
 
+    /**
+     * A link to the booking form
+     *
+     * @param $id int The instance ID
+     * @param $parentseve object The Parents' Evening record
+     * @return string HTML link
+     */
     function booking_link($id, $parentseve) {
         $url = new moodle_url('/blocks/parentseve/book.php', array('id' => $id, 'parentseve' => $parentseve->id));
         return html_writer::link($url, get_string('bookapps','block_parentseve'));
     }
 
+    /**
+     * A link to display all schedules
+     *
+     * @param $id int The instance ID
+     * @param $parentseve object The Parents' Evening record
+     * @return string HTML link
+     */
     function allschedules_link($id, $parentseve) {
         $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
         return html_writer::link($url, get_string('allschedules','block_parentseve'));
     }
 
+    /**
+     * A link to display just the current user's schedule
+     *
+     * @param $id int The instance ID
+     * @param $parentseve object The Parents' Evening record
+     * @return string HTML link
+     */
     function myschedule_link($id, $parentseve) {
         $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id, 'my' => 1));
         return html_writer::link($url, get_string('justmyschedule','block_parentseve'));
     }
 
+    /**
+     * Additional information about the parents' evening
+     *
+     * @param $starttime int The start time for the Parents' Evening
+     * @param $info string The information to be displayed
+     * @return string HTML paragraph containing the info
+     */
     function booking_info($starttime, $info) {
         $formatteddate = (object)array('date' => date('l jS F Y', $starttime));
         $output = get_string('parentseveon', 'block_parentseve', $formatteddate);
@@ -89,6 +161,12 @@ class block_parentseve_renderer extends plugin_renderer_base {
         return $output;
     }
 
+    /**
+     * The skeleton booking form, to be filled out by AJAX when the newapp button is clicked
+     *
+     * @param $url moodle_url Action URL for the form
+     * @return string HTML form containing skeleton for the booking form
+     */
     function booking_form($url) {
         $output = '';
         $output .= html_writer::start_tag('form', array('method' => 'post', 'action' => $url->out(false), 'id' => 'parentseve_form'));
@@ -109,6 +187,14 @@ class block_parentseve_renderer extends plugin_renderer_base {
         return $output;
     }
 
+    /**
+     * Notification of success/failure creating bookings
+     *
+     * @param $successes array Appointments successfully booked
+     * @param $failures array Appointments that couldn't be booked
+     * @param $url moodle_url URL to link to
+     * @return string HTML paragraphs containing notifications
+     */
     function booking_response($successes, $failures, $url) {
         $output = '';
         $items = array();
@@ -140,6 +226,12 @@ class block_parentseve_renderer extends plugin_renderer_base {
 
     }
 
+    /**
+     * Warning to IE<8 users that the booking form wont work
+     *
+     * @param $altmethod string Alternative method of booking appointments
+     * @return string HTML div containing the warning and alternative method
+     */
     function ie_warning($altmethod) {
         $strwarning = get_string('iewarning', 'block_parentseve');
         $stralt = get_string('iealternatively', 'block_parentseve').$altmethod;
