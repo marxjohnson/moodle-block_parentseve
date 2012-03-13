@@ -117,7 +117,6 @@ M.block_parentseve = M.block_parentseve || {
             }
         });
 
-
     },
 
     validate: function(form) {

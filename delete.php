@@ -29,6 +29,7 @@
  */
 
 require_once('../../config.php');
+require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 $id = required_param('id', PARAM_INT);
 $parentseve = required_param('parentseve', PARAM_INT);
 
@@ -42,15 +43,18 @@ if (!$parentseve) {
     print_error('noparentseve', 'block_parentseve');
 }
 
-$PAGE->set_url(new moodle_url('/blocks/parentseve/delete.php', array('id' => $id, 'parentseve' => $parentseve->id)));
+$urlparams = array('id' => $id, 'parentseve' => $parentseve->id);
+$PAGE->set_url(new moodle_url('/blocks/parentseve/delete.php', $urlparams));
 
-if(has_capability('block/parentseve:manage', $context)) {
+if (has_capability('block/parentseve:manage', $context)) {
     $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
 } else {
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'));
 }
-if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
+$viewall = has_capability('block/parentseve:viewall', $context);
+$isteacher = parentseve_isteacher($USER->id, $parentseve);
+if ($viewall || $isteacher) {
     $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $parentseve->id));
     $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart), $url);
 } else {
@@ -77,8 +81,7 @@ if ($confirm) {
     </form>
     <form method="post" action="'.$CFG->wwwroot.'/blocks/parentseve/manage.php">
     <input type="submit" value="'.get_string('no').'" />
-    </form>'
-    ;
+    </form>';
 }
 
 echo $OUTPUT->header();

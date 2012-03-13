@@ -38,13 +38,13 @@ if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseve))) {
 }
 
 $context = get_context_instance(CONTEXT_BLOCK, $id);
-if(!has_capability('block/parentseve:manage', $context) && $parentseve->timeend < time()) {
+if (!has_capability('block/parentseve:manage', $context) && $parentseve->timeend < time()) {
     print_error('oldparentseve', 'block_parentseve');
 }
 
 /// Print the page header
 $PAGE->set_url('/block/parentseve/schedule.php', array('id' => 39389, 'parentseve' => 10));
-if(has_capability('block/parentseve:manage', $context)) {
+if (has_capability('block/parentseve:manage', $context)) {
     $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
 } else {
@@ -57,10 +57,10 @@ add_to_log(0, 'parentseve', 'View schedule', $PAGE->url, $id);
 
 $content = $output->booking_link($id, $parentseve);
 
-$is_teacher = parentseve_isteacher($USER->id,$parentseve);
+$is_teacher = parentseve_isteacher($USER->id, $parentseve);
 $cancancel = has_capability('block/parentseve:cancel', $context);
 
-if(has_capability('block/parentseve:viewall', $context) || $is_teacher) {
+if (has_capability('block/parentseve:viewall', $context) || $is_teacher) {
 
     if ($justmyschedule) {
 
@@ -76,9 +76,9 @@ if(has_capability('block/parentseve:viewall', $context) || $is_teacher) {
 
         //show all teachers' schedules
         $teachers = parentseve_get_teachers($parentseve);
-        foreach($teachers as $teacher) {
+        foreach ($teachers as $teacher) {
             $schedule = parentseve_get_schedule($teacher, $parentseve, $id);
-            $headingtext = get_string('schedulefor', 'block_parentseve', $teacher->firstname.' '.$teacher->lastname);
+            $headingtext = get_string('schedulefor', 'block_parentseve', fullname($teacher));
             $content .= $OUTPUT->heading($headingtext, 3, 'parentseve_schedule_header');
             $content .= $output->schedule_table($id, $parentseve, $schedule, $cancancel);
         }

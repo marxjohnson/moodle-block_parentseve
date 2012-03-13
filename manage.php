@@ -26,8 +26,8 @@
  * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
  */
 
-require_once '../../config.php';
-require $CFG->libdir.'/tablelib.php';
+require_once('../../config.php');
+require_once($CFG->libdir.'/tablelib.php');
 
 require_login($SITE);
 $id = required_param('id', PARAM_INT);
@@ -36,12 +36,6 @@ $PAGE->set_url('/blocks/parenteve/manage.php', array('id' => $id));
 require_capability('block/parentseve:manage', $context);
 
 $parentseves = $DB->get_records('parentseve', null, 'timestart DESC');
-/*$PAGE->requires->js(array('yui_yahoo',
-                    'yui_event',
-                    'yui_element',
-                    'yui_datasource',
-                    'yui_datatable',
-                    '/blocks/parentseve/js/lib.js.php'));*/
 
 $navlinks = array();
 $navlinks[] = array('name' => get_string('parentseve', 'block_parentseve'), 'type' => 'activity');

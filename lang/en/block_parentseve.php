@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Defines lang strings for Parents' Evening block
+ *
+ * @package block_parentseve
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
+ **/
+
 $string['allowanon'] = 'Allow anonymous users';
 $string['allschedules'] = 'Show All Appointments';
 $string['allowanon_explain'] = 'If this setting is checked, anyone who knows the URL can book an appointment (so parents don\'t have to have an account). Otherwise, only users with parentseve:book can access the page.';
@@ -68,5 +91,3 @@ $string['teacher'] = 'Teacher';
 $string['timeend'] = 'End time';
 $string['timestart'] = 'Start time';
 $string['viewapps'] = 'View Appointments';
-
-?>

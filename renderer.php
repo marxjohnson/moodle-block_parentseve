@@ -37,19 +37,32 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $selected parentseve_teacher_selector
      * @return string HTML form containing the selectors
      */
-    function teacher_selector ($potential, $selected) {
+    public function teacher_selector ($potential, $selected) {
 
         $output = '';
         $table = new html_table('teacher_selector');
         $row = new html_table_row();
         $row->cells[] = $selected->display(true);
-        $cell = html_writer::empty_tag('input', array('class' => 'add_button', 'name' => 'add', 'type' => 'submit', 'value' => $this->output->larrow().' '.get_string('add')));
-        $cell .= html_writer::empty_tag('input', array('class' => 'remove_button', 'name' => 'remove', 'type' => 'submit', 'value' => get_string('remove').' '.$this->output->rarrow()));
+        $addattrs = array(
+            'class' => 'add_button',
+            'name' => 'add',
+            'type' => 'submit',
+            'value' => $this->output->larrow().' '.get_string('add')
+        );
+        $cell = html_writer::empty_tag('input', $addattrs);
+        $delattrs = array(
+            'class' => 'remove_button',
+            'name' => 'remove',
+            'type' => 'submit',
+            'value' => get_string('remove').' '.$this->output->rarrow()
+        );
+        $cell .= html_writer::empty_tag('input', $delattrs);
         $row->cells[] = $cell;
         $row->cells[] = $potential->display(true);
         $table->data[] = $row;
 
-        $output = html_writer::start_tag('form', array('action' => $this->page->url->out(false), 'method' => 'post'));
+        $formattrs = array('action' => $this->page->url->out(false), 'method' => 'post');
+        $output = html_writer::start_tag('form', $formattrs);
         $output .= html_writer::table($table);
         $output .= html_writer::end_tag('form');
 
@@ -65,40 +78,44 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $cancel bool Display cancel links?
      * @return string HTML table containing the booked appointments
      */
-    function schedule_table($id, $parentseve, $appointments = array(), $cancel = false) {
+    public function schedule_table($id, $parentseve, $appointments = array(), $cancel = false) {
 
         $output = '';
 
         $table = new html_table();
-        $table->head = array(get_string('apptime','block_parentseve'),
-                        get_string('parentname','block_parentseve'),
-                        get_string('studentname','block_parentseve'));
+        $table->head = array(get_string('apptime', 'block_parentseve'),
+                        get_string('parentname', 'block_parentseve'),
+                        get_string('studentname', 'block_parentseve'));
         if ($cancel) {
             $table->head[] = '';
         }
 
         $appcron = array();
         if (!empty($appointments)) {
-            foreach($appointments as $appointment){
+            foreach ($appointments as $appointment) {
                 $appcron[$appointment->apptime]['parentname'] = $appointment->parentname;
                 $appcron[$appointment->apptime]['studentname'] = $appointment->studentname;
                 $appcron[$appointment->apptime]['id'] = $appointment->id;
             }
         }
 
-        for($time = $parentseve->timestart; $time < $parentseve->timeend; $time += $parentseve->appointmentlength) {
+        $start = $parentseve->timestart;
+        $end = $parentseve->timeend;
+        $length = $parentseve->appointmentlength;
+        for ($time = $start; $time < $end; $time += $length) {
 
             $row = array();
-            $row[] = date('G:i',$time);
+            $row[] = date('G:i', $time);
             $row[] = '';
             $row[] = '';
             $row[] = '';
 
-            if(!empty($appcron[$time])) {
+            if (!empty($appcron[$time])) {
                 $row[1] = $appcron[$time]['parentname'];
                 $row[2] = $appcron[$time]['studentname'];
                 if ($cancel) {
-                    $cancelurl = new moodle_url('/blocks/parentseve/cancel.php', array('id' => $id, 'appointment' => $appcron[$time]['id']));
+                    $cancelparams = array('id' => $id, 'appointment' => $appcron[$time]['id']);
+                    $cancelurl = new moodle_url('/blocks/parentseve/cancel.php', $cancelparams);
                     $row[3] = html_writer::link($cancelurl, get_string('cancel'));
                 }
             }
@@ -118,9 +135,10 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $parentseve object The Parents' Evening record
      * @return string HTML link
      */
-    function booking_link($id, $parentseve) {
-        $url = new moodle_url('/blocks/parentseve/book.php', array('id' => $id, 'parentseve' => $parentseve->id));
-        return html_writer::link($url, get_string('bookapps','block_parentseve'));
+    public function booking_link($id, $parentseve) {
+        $bookparams = array('id' => $id, 'parentseve' => $parentseve->id);
+        $url = new moodle_url('/blocks/parentseve/book.php', $bookparams);
+        return html_writer::link($url, get_string('bookapps', 'block_parentseve'));
     }
 
     /**
@@ -130,9 +148,10 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $parentseve object The Parents' Evening record
      * @return string HTML link
      */
-    function allschedules_link($id, $parentseve) {
-        $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
-        return html_writer::link($url, get_string('allschedules','block_parentseve'));
+    public function allschedules_link($id, $parentseve) {
+        $allparams = array('id' => $id, 'parentseve' => $parentseve->id);
+        $url = new moodle_url('/blocks/parentseve/schedule.php', $allparams);
+        return html_writer::link($url, get_string('allschedules', 'block_parentseve'));
     }
 
     /**
@@ -142,9 +161,10 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $parentseve object The Parents' Evening record
      * @return string HTML link
      */
-    function myschedule_link($id, $parentseve) {
-        $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id, 'my' => 1));
-        return html_writer::link($url, get_string('justmyschedule','block_parentseve'));
+    public function myschedule_link($id, $parentseve) {
+        $myparams = array('id' => $id, 'parentseve' => $parentseve->id, 'my' => 1);
+        $url = new moodle_url('/blocks/parentseve/schedule.php', $myparams);
+        return html_writer::link($url, get_string('justmyschedule', 'block_parentseve'));
     }
 
     /**
@@ -154,7 +174,7 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $info string The information to be displayed
      * @return string HTML paragraph containing the info
      */
-    function booking_info($starttime, $info) {
+    public function booking_info($starttime, $info) {
         $formatteddate = (object)array('date' => date('l jS F Y', $starttime));
         $output = get_string('parentseveon', 'block_parentseve', $formatteddate);
         $output .= html_writer::tag('p', $info, array('class' => 'info'));
@@ -167,20 +187,32 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $url moodle_url Action URL for the form
      * @return string HTML form containing skeleton for the booking form
      */
-    function booking_form($url) {
+    public function booking_form($url) {
         $output = '';
-        $output .= html_writer::start_tag('form', array('method' => 'post', 'action' => $url->out(false), 'id' => 'parentseve_form'));
+        $formattrs = array(
+            'method' => 'post',
+            'action' => $url->out(false),
+            'id' => 'parentseve_form'
+        );
+        $output .= html_writer::start_tag('form', $formattrs);
 
-        $names = html_writer::label(get_string('parentname','block_parentseve'), 'parentname');
+        $names = html_writer::label(get_string('parentname', 'block_parentseve'), 'parentname');
         $names .= html_writer::empty_tag('input', array('type' => 'text', 'name' => 'parentname'));
-        $names .= html_writer::label(get_string('studentname','block_parentseve'), 'studentname');
+        $names .= html_writer::label(get_string('studentname', 'block_parentseve'), 'studentname');
         $names .= html_writer::empty_tag('input', array('type' => 'text', 'name' => 'studentname'));
 
         $output .= $this->output->container($names, 'names');
-        $buttons = html_writer::tag('button', get_string('newapp','block_parentseve'), array('type' => 'button', 'id' => 'newapp_button'));
-        $buttons .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('confirmapps','block_parentseve')));
+        $buttonattrs = array('type' => 'button', 'id' => 'newapp_button');
+        $inputattrs = array(
+            'type' => 'submit',
+            'value' => get_string('confirmapps', 'block_parentseve')
+        );
+        $strnewapp = get_string('newapp', 'block_parentseve');
+        $buttons = html_writer::tag('button', $strnewapp, $buttonattrs);
+        $buttons .= html_writer::empty_tag('input', $inputattrs);
         $output .= $this->output->container($buttons, 'parentseve_buttons');
-        $output .= $this->output->container('<!--AJAX will put the schedules in here-->', '', 'parentseve_appointments');
+        $placeholder = '<!--AJAX will put the schedules in here-->';
+        $output .= $this->output->container($placeholder, '', 'parentseve_appointments');
         $output .= $this->output->container('', '', 'clearfix');
         $output .= html_writer::end_tag('form');
 
@@ -195,31 +227,33 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $url moodle_url URL to link to
      * @return string HTML paragraphs containing notifications
      */
-    function booking_response($successes, $failures, $url) {
+    public function booking_response($successes, $failures, $url) {
         $output = '';
         $items = array();
         foreach ($successes as $success) {
             $args = (object)array(
                 'teacher' => $success->teacher,
-                'apptime' => date('G:i',$success->apptime)
+                'apptime' => date('G:i', $success->apptime)
             );
-            $items[] = get_string('appbooked','block_parentseve', $args);
+            $items[] = get_string('appbooked', 'block_parentseve', $args);
         }
         foreach ($failures as $failure) {
             $args = (object)array(
                 'teacher' => $failure->teacher,
-                'apptime' => date('G:i',$failure->apptime)
+                'apptime' => date('G:i', $failure->apptime)
             );
-            $items[] = get_string('appnotbooked','block_parentseve', $args);
+            $items[] = get_string('appnotbooked', 'block_parentseve', $args);
         }
         $output .= html_writer::alist($items);
-        $output .= html_writer::tag('p', get_string('success', 'block_parentseve', count($successes)));
+        $success = get_string('success', 'block_parentseve', count($successes));
+        $output .= html_writer::tag('p', $success);
 
         if (count($failures)) {
-            $output .= html_writer::tag('p', get_string('fail', 'block_parentseve', count($failures)));
+            $fail = get_string('fail', 'block_parentseve', count($failures));
+            $output .= html_writer::tag('p', $fail);
         }
 
-        $output .= $this->output->heading(get_string('printsave','block_parentseve'), 4);
+        $output .= $this->output->heading(get_string('printsave', 'block_parentseve'), 4);
         $output .= html_writer::link($url, get_string('backtoappointments', 'block_parentseve'));
 
         return $output;
@@ -232,7 +266,7 @@ class block_parentseve_renderer extends plugin_renderer_base {
      * @param $altmethod string Alternative method of booking appointments
      * @return string HTML div containing the warning and alternative method
      */
-    function ie_warning($altmethod) {
+    public function ie_warning($altmethod) {
         $strwarning = get_string('iewarning', 'block_parentseve');
         $stralt = get_string('iealternatively', 'block_parentseve').$altmethod;
 

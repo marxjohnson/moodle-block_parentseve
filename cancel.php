@@ -53,17 +53,21 @@ $content = '';
 if ($app) {
     if ($confirm) {
         $DB->delete_records('parentseve_app', array('id' => $appointment));
-        $redirecturl = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
+        $redirectparams = array('id' => $id, 'parentseve' => $parentseve->id);
+        $redirecturl = new moodle_url('/blocks/parentseve/schedule.php', $redirectparams);
         redirect($redirecturl);
     } else {
-        if(has_capability('block/parentseve:manage', $context)) {
+        if (has_capability('block/parentseve:manage', $context)) {
             $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
             $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
         } else {
             $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'));
         }
-        if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
-            $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
+        $viewall = has_capability('block/parentseve:viewall', $context);
+        $isteacher = parentseve_isteacher($USER->id, $parentseve);
+        if ($viewall || $isteacher) {
+            $urlparams = array('id' => $id, 'parentseve' => $parentseve->id);
+            $url = new moodle_url('/blocks/parentseve/schedule.php', $urlparams);
             $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart), $url);
         } else {
             $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart));
@@ -90,7 +94,9 @@ if ($app) {
         $cancelurl = new moodle_url('/blocks/parentseve/schedule.php', $cancelparams);
         $cancelbutton = new single_button($cancelurl, get_string('no'), 'get');
 
-        $content .= $OUTPUT->confirm(get_string('confirmcancel', 'block_parentseve'), $confirmbutton, $cancelbutton);
+        $content .= $OUTPUT->confirm(get_string('confirmcancel', 'block_parentseve'),
+                                     $confirmbutton,
+                                     $cancelbutton);
     }
 } else {
     print_error('noappointment', 'block_parentseve');

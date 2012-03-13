@@ -32,7 +32,7 @@ require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 
 $config = get_config('block/parentseve');
 
-if(!$config->allowanon) {
+if (!$config->allowanon) {
     require_login($SITE);
 } else {
     $PAGE->set_context(get_context_instance(CONTEXT_SYSTEM));
@@ -51,19 +51,23 @@ if ($parentseve->appointmentlength == 0) {
     die(get_string('appointmentlengthzero', 'block_parentseve'));
 }
 
-//In order to avoid a loop of DB calls, fetch all the relevant appointments then put them into an array which php can manipulate a lot quicker
+// In order to avoid a loop of DB calls, fetch all the relevant appointments then put them
+// into an array which php can manipulate a lot quicker
 $appcron = array();
 $params = array('teacherid' => $teacherid, 'parentseveid' => $parentseve->id);
-if ($appointments = $DB->get_records('parentseve_app', $params, '', 'id, apptime')){
+if ($appointments = $DB->get_records('parentseve_app', $params, '', 'id, apptime')) {
     foreach ($appointments as $appointment) {
         $appcron[$appointment->apptime]=true;
     }
 }
 
 $slots = array();
-for ($time = $parentseve->timestart; $time < $parentseve->timeend; $time += $parentseve->appointmentlength) {
+$start = $parentseve->timestart;
+$end = $parentseve->timend;
+$length = $parentseve->appointmentlength;
+for ($time = $start; $time < $end; $time += $length) {
     $slot = new stdClass;
-    $slot->displaytime = date('G:i',$time);
+    $slot->displaytime = date('G:i', $time);
     if (!empty($appcron[$time])) {
         $slot->busy = true;
     } else {

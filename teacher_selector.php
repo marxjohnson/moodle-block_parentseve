@@ -63,7 +63,10 @@ class parentseve_teacher_selector extends user_selector_base {
      */
     protected function get_current_teacher_ids() {
         global $DB;
-        $teachers = $DB->get_records('parentseve_teacher', array('parentseveid' => $this->parentseve->id), '', 'userid, id, parentseveid');
+        $teachers = $DB->get_records('parentseve_teacher',
+                                     array('parentseveid' => $this->parentseve->id),
+                                     '',
+                                     'userid, id, parentseveid');
         if ($teachers) {
             return array_keys($teachers);
         }
@@ -79,7 +82,10 @@ class parentseve_teacher_selector extends user_selector_base {
     protected function where_sql($current_teacherids) {
         global $DB;
         if ($current_teacherids) {
-            list($in_sql, $params) = $DB->get_in_or_equal($current_teacherids, SQL_PARAMS_QM, 'param', false);
+            list($in_sql, $params) = $DB->get_in_or_equal($current_teacherids,
+                                                          SQL_PARAMS_QM,
+                                                          'param',
+                                                          false);
             $where = 'id '.$in_sql;
         } else {
             $where = '';

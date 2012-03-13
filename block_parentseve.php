@@ -33,7 +33,7 @@ class block_parentseve extends block_list {
     /**
      * Initalise the block - set the title and version
      */
-    function init() {
+    public function init() {
         $this->title = get_string('parentseve', 'block_parentseve');
     }
 
@@ -43,11 +43,11 @@ class block_parentseve extends block_list {
      * Displays a block containing a list of links to the current parents' evenings
      * If the user has parentseve:manage, also displays a link to the admin interface.
      */
-    function get_content() {
+    public function get_content() {
         global $DB, $OUTPUT, $USER;
 
         if ($this->content !== null) {
-          return $this->content;
+            return $this->content;
         }
 
         $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
@@ -59,24 +59,27 @@ class block_parentseve extends block_list {
         if (has_capability('block/parentseve:manage', $context)) {
             $params = array('id' => $this->instance->id);
             $url = new moodle_url('/blocks/parentseve/manage.php', $params);
-            $strmanage = get_string('manageparentseve','block_parentseve');
+            $strmanage = get_string('manageparentseve', 'block_parentseve');
             $this->content->items[] = html_writer::link($url, $strmanage);
             $this->content->icons[] = '';
         }
 
         if (has_capability('block/parentseve:book', $context)) {
             $parentseves = $DB->get_records_select('parentseve', 'timeend > ?', array(time()));
-            foreach($parentseves as $parentseve) {
+            foreach ($parentseves as $parentseve) {
                 $params = array('id' => $this->instance->id, 'parentseve' => $parentseve->id);
                 $url = new moodle_url('/blocks/parentseve/book.php', $params);
                 $startdate = date('D jS M Y', $parentseve->timestart);
                 $this->content->items[] = html_writer::link($url, $startdate);
                 $this->content->icons[] = $OUTPUT->pix_icon('i/item', 'item');
-                if (parentseve_isteacher($USER->id, $parentseve) || has_capability('block/parentseve:viewall', $context)) {
+                $isteacher = parentseve_isteacher($USER->id, $parentseve);
+                $viewall = has_capability('block/parentseve:viewall', $context);
+                if ($isteacher || $viewall) {
                     $params = array('id' => $this->instance->id, 'parentseve' => $parentseve->id);
                     $url = new moodle_url('/blocks/parentseve/schedule.php', $params);
                     $strviewapps = get_string('viewapps', 'block_parentseve');
-                    $this->content->items[] = '&nbsp;&nbsp;&nbsp;&ndash; '.html_writer::link($url, $strviewapps);
+                    $indent = '&nbsp;&nbsp;&nbsp;&ndash; ';
+                    $this->content->items[] = $indent.html_writer::link($url, $strviewapps);
                     $this->content->icons[] = '';
                 }
 
@@ -87,7 +90,7 @@ class block_parentseve extends block_list {
 
     }
 
-    function applicable_formats() {
+    public function applicable_formats() {
         return array('site-index' => true);
     }
 

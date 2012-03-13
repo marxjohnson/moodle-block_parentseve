@@ -27,16 +27,17 @@
  */
 
 /**
-* Prints a schedule for the teacher specified
-*
-* Prints out a {@see flexible_table} containing a list of all possible appointments for a teacher,
-* with student and parents names for those appointments that have been booked.
-*
-* @param object $teacher the user object for the teacher
-* @param object $parentseve The record for the parents' evening
-* @return boolean was a schedule printed sucessfully? Will return false if teacher has no appointments booked
-*/
-function parentseve_get_schedule($teacher,$parentseve,$id) {
+ * Prints a schedule for the teacher specified
+ *
+ * Prints out a {@see flexible_table} containing a list of all possible appointments for a teacher,
+ * with student and parents names for those appointments that have been booked.
+ *
+ * @param object $teacher the user object for the teacher
+ * @param object $parentseve The record for the parents' evening
+ * @return boolean was a schedule printed sucessfully? Will return false if teacher has no
+ *                 appointments booked
+ */
+function parentseve_get_schedule($teacher, $parentseve, $id) {
     global $DB;
 
     $sql = 'SELECT *
@@ -51,8 +52,8 @@ function parentseve_get_schedule($teacher,$parentseve,$id) {
 /**
  * Get list of teachers for a particular parent's evening
  *
- * If the parents' evening exists and has some teachers defined, returns the user IDs of all the teachers
- * for the parents' evening.
+ * If the parents' evening exists and has some teachers defined, returns the user IDs of all 
+ * the teachers for the parents' evening.
  *
  * @param object $parentseve The record for the requires parents' evening
  * @return array array of user objects containing only ids, firstnames and lastnames
@@ -67,7 +68,7 @@ function parentseve_get_teachers($parentseve) {
     $where = 'WHERE t.parentseveid = ? ';
     $order = 'ORDER BY firstname, lastname ASC';
     $params = array($parentseve->id);
-    if($teachers = $DB->get_records_sql($select.$from.$where.$order, $params)) {
+    if ($teachers = $DB->get_records_sql($select.$from.$where.$order, $params)) {
         return $teachers;
     } else {
         return array();
@@ -85,7 +86,8 @@ function parentseve_get_teachers($parentseve) {
 
 function parentseve_isteacher($userid, $parentseve) {
     global $DB;
-    return $DB->get_record('parentseve_teacher', array('parentseveid' => $parentseve->id, 'userid' => $userid));
+    $params = array('parentseveid' => $parentseve->id, 'userid' => $userid);
+    return $DB->get_record('parentseve_teacher', $params);
 }
 
 /**

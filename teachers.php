@@ -23,6 +23,7 @@
  **/
 
 require_once('../../config.php');
+require_once($CFG->dirroot.'/blocks/parentseve/lib.php');
 require_once($CFG->dirroot.'/blocks/parentseve/teacher_selector.php');
 
 $id = required_param('id', PARAM_INT);
@@ -38,15 +39,18 @@ require_login($SITE);
 $context = get_context_instance(CONTEXT_BLOCK, $id);
 
 require_capability('block/parentseve:manage', $context);
-$PAGE->set_url('/blocks/parentseve/teachers.php', array('id' => $id, 'parentseve' => $parentseve->id));
+$urlparams = array('id' => $id, 'parentseve' => $parentseve->id);
+$PAGE->set_url('/blocks/parentseve/teachers.php', $urlparams);
 
-if(has_capability('block/parentseve:manage', $context)) {
+if (has_capability('block/parentseve:manage', $context)) {
     $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
 } else {
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'));
 }
-if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
+$viewall = has_capability('block/parentseve:viewall', $context);
+$isteacher = parentseve_isteacher($USER->id, $parentseve);
+if ($viewall || $isteacher) {
     $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $parentseve->id));
     $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart), $url);
 } else {
@@ -59,7 +63,7 @@ $output = $PAGE->get_renderer('block_parentseve');
 $potential_selector = new parentseve_teacher_selector('potential_selector', $parentseve);
 $selected_selector = new parentseve_selected_teacher_selector('selected_selector', $parentseve);
 
-if(!empty($add)) {
+if (!empty($add)) {
     $newteachers = $potential_selector->get_selected_users();
     foreach ($newteachers as $id => $newteacher) {
         $teacher = new stdClass;
@@ -69,10 +73,11 @@ if(!empty($add)) {
     }
 }
 
-if(!empty($remove)) {
+if (!empty($remove)) {
     $oldteachers = $selected_selector->get_selected_users();
     foreach ($oldteachers as $id => $oldteacher) {
-        if($teacher = $DB->get_record('parentseve_teacher', array('parentseveid' => $parentseve->id, 'userid' => $id))) {
+        $teacherparams = array('parentseveid' => $parentseve->id, 'userid' => $id);
+        if ($teacher = $DB->get_record('parentseve_teacher', $teacherparams)) {
             $DB->delete_records('parentseve_teacher', array('id' => $teacher->id));
         }
     }

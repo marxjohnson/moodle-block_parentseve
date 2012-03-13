@@ -34,7 +34,7 @@ $parentseve = required_param('parentseve', PARAM_INT);
 $config = get_config('block/parentseve');
 $context = get_context_instance(CONTEXT_BLOCK, $id);
 
-if(!$config->allowanon) {
+if (!$config->allowanon) {
     require_login($SITE);
     require_capability('block/parentseve:book', $context);
 } else {
@@ -45,7 +45,7 @@ if (!$parentseve = $DB->get_record('parentseve', array('id' => $parentseve))) {
     print_error('noparentseve', 'block_parentseve');
 }
 
-if(!has_capability('block/parentseve:manage', $context) && $parentseve->timeend < time()) {
+if (!has_capability('block/parentseve:manage', $context) && $parentseve->timeend < time()) {
     print_error('oldparentseve', 'block_parentseve');
 }
 
@@ -55,14 +55,17 @@ $newappointments = optional_param('appointment', null, PARAM_TEXT);
 $newappointmentteachers = optional_param('appointmentteacher', null, PARAM_TEXT);
 
 $PAGE->set_url('/blocks/parentseve/book.php', array('id' => $id, 'parentseve' => $parentseve->id));
-if(has_capability('block/parentseve:manage', $context)) {
+if (has_capability('block/parentseve:manage', $context)) {
     $url = new moodle_url('/blocks/parentseve/manage.php', array('id' => $id));
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'), $url);
 } else {
     $PAGE->navbar->add(get_string('parentseve', 'block_parentseve'));
 }
-if(has_capability('block/parentseve:viewall', $context) || parentseve_isteacher($USER->id, $parentseve)) {
-    $url = new moodle_url('/blocks/parentseve/schedule.php', array('id' => $id, 'parentseve' => $parentseve->id));
+$isteacher = parentseve_isteacher($USER->id, $parentseve);
+$viewall = has_capability('block/parentseve:viewall', $context);
+if ($viewall || $isteacher) {
+    $params = array('id' => $id, 'parentseve' => $parentseve->id);
+    $url = new moodle_url('/blocks/parentseve/schedule.php', $params);
     $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart), $url);
 } else {
     $PAGE->navbar->add(date('l jS M Y', $parentseve->timestart));
@@ -94,7 +97,7 @@ $PAGE->requires->js_init_call('M.block_parentseve.init',
                               false,
                               $jsmodule);
 
-$content = $OUTPUT->heading(get_string('bookapps','block_parentseve'), 1);
+$content = $OUTPUT->heading(get_string('bookapps', 'block_parentseve'), 1);
 
 $content .= $output->ie_warning($config->altmethod);
 
@@ -118,7 +121,11 @@ if (empty($parentname)) {
             $appointment->apptime = $newappointment;
             $appointment->parentname = $parentname;
             $appointment->studentname = $studentname;
-            if(!$DB->record_exists('parentseve_app', array('teacherid' => $appointment->teacherid, 'apptime' => $appointment->apptime))) {
+            $params = array(
+                'teacherid' => $appointment->teacherid,
+                'apptime' => $appointment->apptime
+            );
+            if (!$DB->record_exists('parentseve_app', $params)) {
                 if ($DB->insert_record('parentseve_app', $appointment)) {
                     $appointment->teacher = fullname($teacher);
                     $successes[] = $appointment;

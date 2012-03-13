@@ -26,7 +26,7 @@
  * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
  */
 
-require_once ($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir.'/formslib.php');
 
 /**
  * Defines the configuration form
@@ -37,13 +37,25 @@ class parentseve_form extends moodleform {
     /**
      * Defines the form elements
      */
-    function definition() {
+    public function definition() {
+        global $DB;
         $mform    =& $this->_form;
-        $mform->addElement('header', 'parentseveheader', get_string('createnew', 'block_parentseve'));
-        $mform->addElement('date_time_selector', 'timestart', get_string('timestart', 'block_parentseve'));
-        $mform->addElement('date_time_selector', 'timeend', get_string('timeend', 'block_parentseve'));
-        $mform->addElement('text','appointmentlength',get_string('appointmentlength', 'block_parentseve')); // will have to take this in minutes until figure out duration element type (moodle 2.0)
-        $mform->addElement('htmleditor', 'info', get_string('parentseveinfo', 'block_parentseve'),'rows="10" cols="25"');
+        $mform->addElement('header',
+                           'parentseveheader',
+                           get_string('createnew', 'block_parentseve'));
+        $mform->addElement('date_time_selector',
+                           'timestart',
+                           get_string('timestart', 'block_parentseve'));
+        $mform->addElement('date_time_selector',
+                           'timeend',
+                           get_string('timeend', 'block_parentseve'));
+        $mform->addElement('text',
+                           'appointmentlength',
+                           get_string('appointmentlength', 'block_parentseve'));
+        $mform->addElement('htmleditor',
+                           'info',
+                           get_string('parentseveinfo', 'block_parentseve'),
+                           'rows="10" cols="25"');
         $mform->addElement('hidden', 'id');
         $mform->addElement('hidden', 'parentseve');
         $this->add_action_buttons(false);
