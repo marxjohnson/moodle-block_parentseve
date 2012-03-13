@@ -109,6 +109,8 @@ $mform->set_data($formdata);
 if ($newdata = $mform->get_data()) {
     $newdata->appointmentlength = $newdata->appointmentlength*60;
     unset($newdata->MAX_FILE_SIZE);
+    $importteachers = $newdata->importteachers;
+    unset($newdata->importteachers);
     if ($parentseve) {
 
         // if the evening has been moved to a different day, update any appointments
@@ -138,6 +140,23 @@ if ($newdata = $mform->get_data()) {
         $DB->update_record('parentseve', $parentseve);
         redirect($CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id);
     } else {
+        $parentseveid = $DB->insert_record('parentseve', $newdata);
+        if ($importteachers) {
+            require_once($CFG->dirroot.'/local/progressreview/lib.php');
+            $params = array(
+                'sessionid' => $importteachers,
+                'reviewtype' => PROGRESSREVIEW_SUBJECT
+            );
+            $reviews = $DB->get_records('progressreview', $params, '', 'DISTINCT teacherid');
+            foreach ($reviews as $review) {
+                $teacher = (object)array(
+                    'parentseveid' => $parentseveid,
+                    'userid' => $review->teacherid
+                );
+                $DB->insert_record('parentseve_teacher', $teacher);
+            }
+        }
+
         redirect($CFG->wwwroot.'/blocks/parentseve/manage.php?id='.$id);
     }
 }

@@ -58,6 +58,20 @@ class parentseve_form extends moodleform {
                            'rows="10" cols="25"');
         $mform->addElement('hidden', 'id');
         $mform->addElement('hidden', 'parentseve');
+        if (get_config('local_progressreview', 'version')) {
+            $sessions = $DB->get_records_menu('progressreview_session', array(), 'deadline_tutor DESC');
+            $sessions = array(get_string('choosedots')) + $sessions;
+            $mform->addElement('select',
+                               'importteachers',
+                               get_string('importteachers', 'block_parentseve'),
+                               $sessions);
+        }
+
         $this->add_action_buttons(false);
+    }
+
+    public function definition_after_data() {
+        $mform = $this->_form;
+        $mform->disabledIf('importteachers', 'parentseve', 'neq', '');
     }
 }
