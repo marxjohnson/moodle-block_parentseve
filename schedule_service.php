@@ -63,7 +63,7 @@ if ($appointments = $DB->get_records('parentseve_app', $params, '', 'id, apptime
 
 $slots = array();
 $start = $parentseve->timestart;
-$end = $parentseve->timend;
+$end = $parentseve->timeend;
 $length = $parentseve->appointmentlength;
 for ($time = $start; $time < $end; $time += $length) {
     $slot = new stdClass;
