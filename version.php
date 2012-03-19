@@ -24,8 +24,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version = 2012031300;
+$plugin->version = 2012031900;
 $plugin->requires = 2011070100.00;
-$plugin->release = '2.0.1 (2012031300)';
+$plugin->release = '2.0.2 (2012031900)';
 $plugin->maturity = MATURITY_BETA;
 $plugin->component = 'block_parentseve';
