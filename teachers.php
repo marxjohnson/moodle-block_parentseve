@@ -18,7 +18,7 @@
  * Displays form for selecting users as teachers for the current parents' evening
  *
  * @package block_parentseve
- * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth <mike@mike-worth.com>
  * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
  **/
 

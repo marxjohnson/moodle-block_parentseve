@@ -20,7 +20,7 @@
  * and allow anyone else to make appontments.
  *
  * @package block_parentseve
- * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth <mike@mike-worth.com>
  * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
  * @param int $id The ID of the parent's evening
  **/

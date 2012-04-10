@@ -22,7 +22,7 @@
  * using {@see parentseve_teacher_form()}, and a form for configuration of date, time and
  * appointment length using {@see parentseve_form}.
  *
- * @author Mike Worth, Mark Johnson <johnsom@tauntons.ac.uk>
+ * @author Mike Worth <mike@mike-worth.com>, Mark Johnson <johnsom@tauntons.ac.uk>
  * @copyright Copyright &copy; 2009 Taunton's College
  * @package block_parentseve
  * @param id int The ID of an existing parents' evening for editing

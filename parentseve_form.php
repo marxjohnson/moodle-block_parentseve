@@ -22,7 +22,7 @@
  * forms in edit.php, used for creating and editing of parents' evenings.
  *
  * @package block_parentseve
- * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth
+ * @author Mark Johnson <johnsom@tauntons.ac.uk>, Mike Worth <mike@mike-worth.com>
  * @copyright Copyright &copy; 2009, Taunton's College, Southampton, UK
  */
 
