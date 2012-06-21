@@ -123,7 +123,7 @@ if ($newdata = $mform->get_data()) {
             && date('YMd', $parentseve->timeend) != date('YMd', $newdata->timeend)
             ) {
 
-            if ($appointments = get_records('parentseve_app', 'parentseveid', $parentseve->id)) {
+                if ($appointments = $DB->get_records('parentseve_app', array('parentseveid' => $parentseve->id))) {
                 foreach ($appointments as $appointment) {
                     $time = $appointment->apptime - $parentseve->timestart;
                     $newtime = $newdata->timestart+$time;
