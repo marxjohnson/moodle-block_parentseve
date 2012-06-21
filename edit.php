@@ -127,7 +127,7 @@ if ($newdata = $mform->get_data()) {
                 foreach ($appointments as $appointment) {
                     $time = $appointment->apptime - $parentseve->timestart;
                     $newtime = $newdata->timestart+$time;
-                    set_field('parentseve_app', 'apptime', $newtime, 'id', $appointment->id);
+                    $DB->set_field('parentseve_app', 'apptime', $newtime, array('id' => $appointment->id));
                 }
             }
 
